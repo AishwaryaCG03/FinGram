@@ -9,15 +9,16 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - GenZ-style interface with dark mode
 - Quick access to all features
 - Trending financial challenges
-  [Sign_up](https://github.com/aish250/FinGram/blob/8c88ec24f031a8b35416c49e2af6e0602d1e9b52/Screenshot%202025-04-12%20024747.png)
-  [Home Page](https://github.com/aish250/FinGram/blob/8dbb6807e9cb13dbafc859612fa732c907f018a9/Screenshot%202025-04-12%20024847.png)
+-[Sign_up](https://github.com/aish250/FinGram/blob/8c88ec24f031a8b35416c49e2af6e0602d1e9b52/Screenshot%202025-04-12%20024747.png)
+-[Home Page](https://github.com/aish250/FinGram/blob/8dbb6807e9cb13dbafc859612fa732c907f018a9/Screenshot%202025-04-12%20024847.png)
   
 ### EMI Calculator 💰
 - Loan amount calculation in Indian Rupees (₹)
 - Interest rate visualization
 - Monthly payment breakdown
 - Amortization schedule with charts
-- [EMI CALCULATOR](https://github.com/aish250/FinGram/blob/403b6bb09942a5ff9367bdfc1799e0af0ef9c93f/Screenshot%202025-04-12%20025018.png)
+- [EMI Calculator](https://github.com/aish250/FinGram/blob/403b6bb09942a5ff9367bdfc1799e0af0ef9c93f/Screenshot%202025-04-12%20025018.png)
+- [EMI Schedule](https://github.com/aish250/FinGram/blob/16cffe27e6ecdd4a47620951a3987e7910f5225d/Screenshot%202025-04-12%20025047.png)
 
 ### Finance Quiz 📝
 - 5 Categories: Budgeting, Investing, Credit, Taxes, Digital Money
