@@ -9,7 +9,7 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - GenZ-style interface with dark mode
 - Quick access to all features
 - Trending financial challenges
-  [Image_Alt](https://github.com/aish250/FinGram/blob/8c88ec24f031a8b35416c49e2af6e0602d1e9b52/Screenshot%202025-04-12%20024747.png)
+  [Sign_up](https://github.com/aish250/FinGram/blob/8c88ec24f031a8b35416c49e2af6e0602d1e9b52/Screenshot%202025-04-12%20024747.png)
   
 
 ### EMI Calculator 💰
