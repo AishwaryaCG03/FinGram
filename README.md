@@ -53,6 +53,7 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - Interest calculation
 - Visual progress tracking
 - Monthly breakdown
+- [Saving Calculator](https://github.com/aish250/FinGram/blob/cb879688026c2456ebbf553b8ab730e17cec488a/Screenshot%202025-04-12%20033540.png)
 
 ## 🛠️ Technical Stack
 
