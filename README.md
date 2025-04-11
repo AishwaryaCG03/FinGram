@@ -29,6 +29,7 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - Performance tracking
 - Leaderboard functionality
 - [Quizz](https://github.com/aish250/FinGram/blob/86ddd08741078e55b377f63e73df6e65d648bcfe/Screenshot%202025-04-12%20031848.png)
+- [Score Card](https://github.com/aish250/FinGram/blob/86ddd08741078e55b377f63e73df6e65d648bcfe/Screenshot%202025-04-12%20031835.png)
 
 ### Expense Tracker 💸
 - Track daily expenses
