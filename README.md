@@ -122,7 +122,7 @@ CREATE TABLE expenses (
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/fingram.git
+git clone https://github.com/aish250/FinGram.git
 cd fingram
 ```
 
