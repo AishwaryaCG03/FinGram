@@ -17,6 +17,7 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - Interest rate visualization
 - Monthly payment breakdown
 - Amortization schedule with charts
+- [EMI CALCULATOR](https://github.com/aish250/FinGram/blob/403b6bb09942a5ff9367bdfc1799e0af0ef9c93f/Screenshot%202025-04-12%20025018.png)
 
 ### Finance Quiz 📝
 - 5 Categories: Budgeting, Investing, Credit, Taxes, Digital Money
