@@ -10,7 +10,7 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - Quick access to all features
 - Trending financial challenges
 -[Sign_up](https://github.com/aish250/FinGram/blob/8c88ec24f031a8b35416c49e2af6e0602d1e9b52/Screenshot%202025-04-12%20024747.png)
--[Home Page](https://github.com/aish250/FinGram/blob/8dbb6807e9cb13dbafc859612fa732c907f018a9/Screenshot%202025-04-12%20024847.png)
+ [Home Page](https://github.com/aish250/FinGram/blob/8dbb6807e9cb13dbafc859612fa732c907f018a9/Screenshot%202025-04-12%20024847.png)
   
 ### EMI Calculator 💰
 - Loan amount calculation in Indian Rupees (₹)
@@ -37,6 +37,7 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - Category-wise breakdown
 - Export data to CSV
 - Visual analytics
+- [Expense Tracker](https://github.com/aish250/FinGram/blob/5ff507d141eda0c0e5b5f9a169a8d47b4fe18166/Screenshot%202025-04-12%20032709.png)
 
 ### Meme Gallery 🎭
 - Financial education through memes
