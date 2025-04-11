@@ -46,6 +46,7 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - Social media integration (WhatsApp, Twitter, LinkedIn, Instagram)
 - User-generated content support
 - Trending hashtags
+- [Meme Page](https://github.com/aish250/FinGram/blob/9408c254f6df6d2406dce5ac7369ea155db7e674/Screenshot%202025-04-12%20033229.png)
 
 ### Savings Calculator 📊
 - Goal-based savings planning
