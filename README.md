@@ -38,6 +38,7 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - Export data to CSV
 - Visual analytics
 - [Expense Tracker](https://github.com/aish250/FinGram/blob/5ff507d141eda0c0e5b5f9a169a8d47b4fe18166/Screenshot%202025-04-12%20032709.png)
+- [Split Bills](https://github.com/aish250/FinGram/blob/3f38cfec20edc7905228f1b107dcc833de8cec18/Screenshot%202025-04-12%20032725.png)
 
 ### Meme Gallery 🎭
 - Financial education through memes
