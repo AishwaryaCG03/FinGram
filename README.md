@@ -1,4 +1,4 @@
-# FinGram: Financial Education for GenZ 💅
+# FinGram: Financial Advisor 
 
 A modern, GenZ-focused financial education platform that makes learning about money management fun and engaging. Built with Streamlit and Python, FinGram combines memes, quizzes, and practical tools to help young adults understand personal finance.
 
@@ -9,6 +9,7 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - GenZ-style interface with dark mode
 - Quick access to all features
 - Trending financial challenges
+  
 
 ### EMI Calculator 💰
 - Loan amount calculation in Indian Rupees (₹)
@@ -182,23 +183,9 @@ Feel free to contribute to this project:
 4. Push to the branch
 5. Create a pull request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## 🙏 Acknowledgments
 
 - Streamlit community
 - Financial education resources
 - Open-source contributors
 - GenZ finance influencers
-
-## 📞 Contact
-
-For any queries or suggestions, please reach out:
-- Email: your.email@example.com
-- Twitter: @yourusername
-- LinkedIn: Your Name
-
----
-Made with 💅 by a bestie who wants you to get that bag 
