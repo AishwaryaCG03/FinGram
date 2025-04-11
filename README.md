@@ -20,6 +20,7 @@ A modern, GenZ-focused financial education platform that makes learning about mo
 - [EMI Calculator](https://github.com/aish250/FinGram/blob/403b6bb09942a5ff9367bdfc1799e0af0ef9c93f/Screenshot%202025-04-12%20025018.png)
 - [EMI Schedule](https://github.com/aish250/FinGram/blob/16cffe27e6ecdd4a47620951a3987e7910f5225d/Screenshot%202025-04-12%20025047.png)
 - [Graph Overview](https://github.com/aish250/FinGram/blob/1ea7d40f599eefa47d8d35ff1f83a678e63af980/Screenshot%202025-04-12%20025108.png)
+- [Pro Tip](https://github.com/aish250/FinGram/blob/04d241c6d2c270ac3540c57cd67002712b0290cd/Screenshot%202025-04-12%20025205.png)
 
 ### Finance Quiz 📝
 - 5 Categories: Budgeting, Investing, Credit, Taxes, Digital Money
