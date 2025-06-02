@@ -3,7 +3,6 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-
 def emi_calculator():
     if not st.session_state.logged_in:
         st.error("Bestie, you need to login first to see the tea! 🫖")
