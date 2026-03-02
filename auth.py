@@ -1,5 +1,5 @@
 import streamlit as st
-import hashlib
+import bcrypt
 import sqlite3
 import os
 
@@ -27,21 +27,32 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Hash password
+# Hash password using bcrypt
 def hash_password(password):
-    return hashlib.sha256(str.encode(password)).hexdigest()
+    # Salt is automatically generated and embedded in the hash
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 # Check login credentials
 def check_login(username, password):
     conn = sqlite3.connect('genz_finance.db')
     c = conn.cursor()
     
-    hashed_pw = hash_password(password)
-    c.execute('SELECT * FROM users WHERE username=? AND password=?', (username, hashed_pw))
+    c.execute('SELECT password FROM users WHERE username=?', (username,))
     result = c.fetchone()
     conn.close()
     
-    return result is not None
+    if result:
+        stored_hash = result[0]
+        # Check if the password matches the stored hash
+        try:
+            return bcrypt.checkpw(password.encode('utf-8'), stored_hash.encode('utf-8'))
+        except ValueError:
+            # Fallback for old SHA-256 hashes if any exist during transition
+            import hashlib
+            old_hash = hashlib.sha256(str.encode(password)).hexdigest()
+            return old_hash == stored_hash
+            
+    return False
 
 # Register new user
 def register_user(username, password, email):

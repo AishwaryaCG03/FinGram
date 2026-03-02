@@ -3,13 +3,9 @@ import pandas as pd
 from PIL import Image
 import plotly.express as px
 from auth import init_db, init_session_state, login_page
-from pages.meme_gallery import meme_gallery
-from pages.savings_calculator import savings_calculator
-from pages.problem_solver import problem_solver
-from pages.emi_calculator import emi_calculator
-from pages.finance_quiz import finance_quiz
-from pages.expense_tracker import expense_tracker
-from pages.feedback import feedback_form
+from pages.learning_hub import meme_gallery, finance_quiz, investment_vibes
+from pages.financial_tools import expense_tracker, savings_calculator, emi_calculator
+from pages.user_hub import profile_view, problem_solver, feedback_form
 
 # Initialize database and session state
 init_db()
@@ -48,68 +44,96 @@ st.markdown("""
 if not st.session_state.logged_in:
     login_page()
 else:
+    # Sidebar for navigation at the top
+    st.sidebar.title("Vibe Check ✨")
+    page = st.sidebar.selectbox(
+        "What's the tea?",
+        ["Dashboard 👑", "Money Tools 💸", "Play & Learn 🎭", "Feedback 🫖"]
+    )
+
     # Main header
     st.title("💸 FinGram : Where Money Gets Real")
     st.markdown("### Because being broke isn't the aesthetic we're going for ")
     
-    # Add logout button in sidebar
+    if page == "Dashboard 👑":
+        tab1, tab2 = st.tabs(["Home 🏠", "My Stats 📊"])
+        
+        with tab1:
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.header(f"Today's Financial Tea ☕")
+                st.markdown(f"""
+                Hey **{st.session_state.username}**, ready to get that bag? 
+                
+                - 💅 **Emergency Fund**: Your 'toxic ex was right' backup plan
+                - 🎭 **Investing**: Making your money work harder than your situationship
+                - 💸 **Budgeting**: Main character energy for your wallet
+                """)
+                
+                st.info("Check the **My Stats** tab for your latest scores and expense tracking! 📊")
+            
+            with col2:
+                st.header("Trending Money Moves 🔥")
+                st.metric(
+                    label="Savings Challenge",
+                    value="₹1000",
+                    delta="Better than your ex's credit score"
+                )
+                
+                st.markdown("---")
+                st.subheader("Vibe of the Day ✨")
+                tips = [
+                    "Cancel that subscription you haven't used in 3 months! ✂️",
+                    "Invest ₹500 today - future you will slay! 💸",
+                    "Review your expenses - no shade, just awareness! 👀"
+                ]
+                import random
+                st.write(random.choice(tips))
+        
+        with tab2:
+            profile_view()
+
+    elif page == "Money Tools 💸":
+        tab1, tab2, tab3, tab4 = st.tabs([
+            "Expense Tracker 💸", 
+            "Savings Calculator 💰", 
+            "Investment Vibes ✨", 
+            "EMI Calculator 📈"
+        ])
+        
+        with tab1:
+            expense_tracker()
+        with tab2:
+            savings_calculator()
+        with tab3:
+            investment_vibes()
+        with tab4:
+            emi_calculator()
+            
+    elif page == "Play & Learn 🎭":
+        tab1, tab2, tab3 = st.tabs([
+            "Money Memes 💅", 
+            "Finance Quiz 📝", 
+            "Problem Solver ☕"
+        ])
+        
+        with tab1:
+            meme_gallery()
+        with tab2:
+            finance_quiz()
+        with tab3:
+            problem_solver()
+        
+    elif page == "Feedback 🫖":
+        feedback_form()
+
+    # Sidebar Logout at the bottom
+    st.sidebar.markdown("---")
     if st.sidebar.button("Logout 👋"):
         st.session_state.logged_in = False
         st.session_state.username = None
         st.rerun()
-    
-    # Sidebar for navigation
-    st.sidebar.title("Vibe Check ✨")
-    page = st.sidebar.selectbox(
-        "What's the tea?",
-        ["Home", "Money Memes", "Savings Calculator", "Investment Vibes", "Problem Solver", "EMI Calculator", "Finance Quiz", "Expense Tracker", "Feedback"]
-    )
-
-    if page == "Home":
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.header(f"Today's Financial Tea ☕")
-            st.markdown(f"""
-            Hey **{st.session_state.username}**, ready to get that bag? 
-            
-            - 💅 **Emergency Fund**: Your 'toxic ex was right' backup plan
-            - 🎭 **Investing**: Making your money work harder than your situationship
-            - 💸 **Budgeting**: Main character energy for your wallet
-            """)
-        
-        with col2:
-            st.header("Trending Money Moves 🔥")
-            st.metric(
-                label="Savings Challenge",
-                value="₹1000",
-                delta="Better than your ex's credit score"
-            )
-
-    elif page == "Money Memes":
-        meme_gallery()
-        
-    elif page == "Savings Calculator":
-        savings_calculator()
-        
-    elif page == "Investment Vibes":
-        st.header("Investment Vibes Check ✨")
-        # Add investment content here
-        
-    elif page == "Problem Solver":
-        problem_solver()
-        
-    elif page == "EMI Calculator":
-        emi_calculator()
-        
-    elif page == "Finance Quiz":
-        finance_quiz()
-        
-    elif page == "Expense Tracker":
-        expense_tracker()
-        
-    elif page == "Feedback":
-        feedback_form()
 
     # Footer
     st.markdown("---")
