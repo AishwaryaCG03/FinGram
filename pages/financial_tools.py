@@ -185,7 +185,23 @@ def savings_calculator():
             st.metric("Total Contributions", f"₹{df['Contributions'].iloc[-1]:,.2f}", f"₹{df['Contributions'].iloc[-1] - df['Contributions'].iloc[0]:,.2f}")
         with col3:
             st.metric("Interest Earned", f"₹{df['Interest'].iloc[-1]:,.2f}", f"₹{df['Interest'].iloc[-1] - df['Interest'].iloc[0]:,.2f}")
-        fig1 = px.line(df, x='Date', y=['Balance', 'Contributions'], title='Your Money Growth Journey 💸')
-        st.plotly_chart(fig1, use_container_width=True)
-        fig2 = px.area(df, x='Date', y=['Contributions', 'Interest'], title='Contributions vs Interest 💅')
-        st.plotly_chart(fig2, use_container_width=True)
+        
+        # Display Data Table
+        st.markdown("### Your Growth Breakdown 📊")
+        # Format the dataframe for display
+        display_df = df.copy()
+        display_df['Date'] = display_df['Date'].dt.strftime('%Y-%m-%d')
+        st.dataframe(display_df.style.format({
+            'Balance': '₹{:,.2f}',
+            'Contributions': '₹{:,.2f}',
+            'Interest': '₹{:,.2f}'
+        }), use_container_width=True)
+
+        # Download button
+        csv = display_df.to_csv(index=False)
+        st.download_button(
+            label="Download My Growth Plan 📥",
+            data=csv,
+            file_name="savings_plan.csv",
+            mime="text/csv"
+        )
