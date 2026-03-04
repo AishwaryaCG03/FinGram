@@ -7,6 +7,16 @@ import pandas as pd
 import plotly.express as px
 from auth import save_engagement, get_engagement_counts, get_comments
 import urllib.parse
+import yfinance as yf
+import time
+import os
+
+# Set yfinance cache to a local writable directory to avoid 'unable to open database file' errors
+# Create a .cache directory if it doesn't exist
+cache_dir = os.path.join(os.getcwd(), ".cache")
+if not os.path.exists(cache_dir):
+    os.makedirs(cache_dir)
+yf.set_tz_cache_location(cache_dir)
 
 # --- Meme Gallery Section ---
 def get_social_share_links(caption, hashtags=None):
@@ -134,20 +144,151 @@ def finance_quiz():
         if st.button("New Category"): st.session_state.selected_category, st.session_state.quiz_score, st.session_state.questions_answered, st.session_state.quiz_complete = None, 0, 0, False; st.rerun()
 
 # --- Investment Vibes Section ---
+def fetch_ticker_data(tickers):
+    if not tickers:
+        return []
+    
+    data = []
+    try:
+        # Download 2 days of data for all tickers at once for efficiency
+        # We use group_by='ticker' to get a multi-index DataFrame
+        df_all = yf.download(tickers, period="2d", interval="1d", group_by='ticker', progress=False)
+        
+        for ticker in tickers:
+            try:
+                # Handle single vs multiple tickers in download result
+                if len(tickers) == 1:
+                    df = df_all
+                else:
+                    df = df_all[ticker]
+                
+                if not df.empty and len(df) >= 1:
+                    # Current price is the last Close
+                    current_price = df['Close'].iloc[-1]
+                    
+                    # Previous close
+                    if len(df) >= 2:
+                        prev_close = df['Close'].iloc[-2]
+                    else:
+                        # Fallback if only 1 day is available
+                        prev_close = df['Open'].iloc[-1]
+                    
+                    if pd.notna(current_price) and pd.notna(prev_close):
+                        change = current_price - prev_close
+                        percent_change = (change / prev_close) * 100
+                        
+                        # Determine currency symbol
+                        currency = "₹" if ticker.endswith('.NS') else "$"
+                        
+                        data.append({
+                            "Symbol": ticker,
+                            "Price": f"{currency}{current_price:,.2f}",
+                            "Change": f"{'+' if change > 0 else ''}{change:,.2f}",
+                            "Change %": f"{'+' if change > 0 else ''}{percent_change:,.2f}%",
+                            "Status": "🚀" if change > 0 else "📉"
+                        })
+            except Exception as e:
+                # Log error internally or skip
+                continue
+    except Exception as e:
+        # If bulk download fails, try individual tickers as fallback
+        for ticker in tickers:
+            try:
+                # Use a slightly different method for individual tickers if needed
+                t = yf.Ticker(ticker)
+                # fast_info is a lightweight way to get current data in newer yfinance
+                try:
+                    current_price = t.fast_info.last_price
+                    prev_close = t.fast_info.previous_close
+                except:
+                    # History fallback
+                    df = t.history(period="2d", interval="1d", progress=False)
+                    if not df.empty:
+                        current_price = df['Close'].iloc[-1]
+                        prev_close = df['Close'].iloc[-2] if len(df) >= 2 else df['Open'].iloc[-1]
+                    else:
+                        continue
+                
+                if pd.notna(current_price) and pd.notna(prev_close):
+                    change = current_price - prev_close
+                    percent_change = (change / prev_close) * 100
+                    currency = "₹" if ticker.endswith('.NS') else "$"
+                    data.append({
+                        "Symbol": ticker,
+                        "Price": f"{currency}{current_price:,.2f}",
+                        "Change": f"{'+' if change > 0 else ''}{change:,.2f}",
+                        "Change %": f"{'+' if change > 0 else ''}{percent_change:,.2f}%",
+                        "Status": "🚀" if change > 0 else "📉"
+                    })
+            except:
+                continue
+                
+    return data
+
 def investment_vibes():
     if not st.session_state.get('logged_in', False):
         st.error("Bestie, login first! 🫖")
         return
+    
     st.title("✨ Investment Vibes Check ✨")
-    st.info("Investments are like your skincare routine! 💆‍♀️")
-    tab1, tab2, tab3 = st.tabs(["Stock Market 📈", "Mutual Funds 🤝", "Crypto & NFT 🚀"])
-    with tab1:
-        st.header("Stock Market 💅")
-        st.markdown("- **Blue Chip**: Stable\n- **Growth**: Exciting\n- **Dividends**: Free money! 💸")
-        df = pd.DataFrame({'Category': ['Tech', 'Finance', 'Retail', 'Health'], 'Growth': [90, 60, 50, 70], 'Risk': [80, 40, 30, 50]})
-        st.plotly_chart(px.scatter(df, x='Risk', y='Growth', text='Category', size='Growth', color='Category'), use_container_width=True)
-    with tab2: st.header("Mutual Funds 🤝"); st.success("SIP into an Index Fund is the move! 💅")
-    with tab3: st.header("Crypto & NFT 🚀"); st.warning("High volatility! 🛑")
+    st.markdown("### Because we're not just saving, we're building an empire! 💅")
+    
+    st.info("Investments are like your skincare routine - the earlier you start, the better you'll look in 20 years! 💆‍♀️")
+    
+    # Live data toggle
+    live_mode = st.toggle("Enable Live Mode (Auto-updates every 10s) 🔥", value=False)
+    
+    # Placeholder for live data
+    live_placeholder = st.empty()
+    
+    # Tickers to track
+    stock_tickers = ["AAPL", "TSLA", "GOOGL", "AMZN", "MSFT", "RELIANCE.NS", "TCS.NS"]
+    crypto_tickers = ["BTC-USD", "ETH-USD", "DOGE-USD", "SOL-USD"]
+    
+    def display_data():
+        with live_placeholder.container():
+            tab1, tab2 = st.tabs(["Stock Market 📈", "Crypto Market 🚀"])
+            
+            with tab1:
+                st.header("Real-time Stocks 💅")
+                stock_data = fetch_ticker_data(stock_tickers)
+                if stock_data:
+                    df_stocks = pd.DataFrame(stock_data)
+                    st.dataframe(df_stocks.style.applymap(
+                        lambda x: 'color: #00ff00' if '+' in str(x) else 'color: #ff3b5c' if '-' in str(x) else '',
+                        subset=['Change', 'Change %']
+                    ), use_container_width=True)
+                else:
+                    st.warning("Fetching live stock tea... 🫖")
+            
+            with tab2:
+                st.header("Real-time Crypto 🚀")
+                crypto_data = fetch_ticker_data(crypto_tickers)
+                if crypto_data:
+                    df_crypto = pd.DataFrame(crypto_data)
+                    st.dataframe(df_crypto.style.applymap(
+                        lambda x: 'color: #00ff00' if '+' in str(x) else 'color: #ff3b5c' if '-' in str(x) else '',
+                        subset=['Change', 'Change %']
+                    ), use_container_width=True)
+                else:
+                    st.warning("Fetching live crypto vibes... 🌊")
+            
+            st.markdown(f"*Last updated: {datetime.now().strftime('%H:%M:%S')}*")
+
+    if live_mode:
+        # Loop for live updates
+        while live_mode:
+            display_data()
+            time.sleep(10)
+            st.rerun()
+    else:
+        # Single display
+        display_data()
+        if st.button("Refresh Vibes 🔄"):
+            st.rerun()
+
+    st.markdown("---")
+    st.header("Which Investor Are You? 🧠")
     risk_profile = st.radio("Market dips? 📉", ["Panic! (Low)", "Wait and see (Mid)", "Buy the dip! (High)"])
     if "Panic" in risk_profile: st.write("Safety First Queen! 🛡️")
     elif "Wait" in risk_profile: st.write("Balanced Bestie! ⚖️")
