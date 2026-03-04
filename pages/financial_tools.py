@@ -131,21 +131,26 @@ def emi_calculator():
             remaining_balance -= principal_payment
             schedule_data.append({"Month": month, "Payment": emi, "Principal": principal_payment, "Interest": interest_payment, "Remaining Balance": max(0, remaining_balance)})
         df = pd.DataFrame(schedule_data)
-        st.markdown("### Visualize Your Financial Journey 📈")
-        tab1, tab2, tab3 = st.tabs(["Payment Breakdown", "Principal vs Interest", "Remaining Balance"])
-        with tab1:
-            fig = go.Figure()
-            fig.add_trace(go.Bar(x=df["Month"], y=df["Principal"], name="Principal", marker_color="#FF3B5C"))
-            fig.add_trace(go.Bar(x=df["Month"], y=df["Interest"], name="Interest", marker_color="#00F2EA"))
-            fig.update_layout(title="Monthly Payment Breakdown", barmode="stack")
-            st.plotly_chart(fig, use_container_width=True)
-        with tab2:
-            fig = px.pie(values=[df["Principal"].sum(), df["Interest"].sum()], names=["Principal", "Interest"], title="Total Payment Breakdown", color_discrete_sequence=["#FF3B5C", "#00F2EA"])
-            st.plotly_chart(fig, use_container_width=True)
-        with tab3:
-            fig = px.line(df, x="Month", y="Remaining Balance", title="Remaining Balance Over Time")
-            fig.update_traces(line_color="#FF3B5C")
-            st.plotly_chart(fig, use_container_width=True)
+        
+        # Display Data Table
+        st.markdown("### Amortization Schedule 📊")
+        # Format the dataframe for display
+        display_df = df.copy()
+        st.dataframe(display_df.style.format({
+            'Payment': '₹{:,.2f}',
+            'Principal': '₹{:,.2f}',
+            'Interest': '₹{:,.2f}',
+            'Remaining Balance': '₹{:,.2f}'
+        }), use_container_width=True)
+
+        # Download button
+        csv = display_df.to_csv(index=False)
+        st.download_button(
+            label="Download Amortization Schedule 📥",
+            data=csv,
+            file_name="emi_schedule.csv",
+            mime="text/csv"
+        )
 
 # --- Savings Calculator Section ---
 def calculate_savings(initial_amount, monthly_savings, interest_rate, years):
