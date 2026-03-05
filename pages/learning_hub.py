@@ -115,6 +115,13 @@ quiz_questions = {
         {"question": "Which factor affects your credit score the most?", "options": ["Your income", "Payment history", "The bank you use", "Your age"], "correct": 1, "explanation": "Pay those bills on time to keep your score iconic! ✅"},
         {"question": "What's a 'credit limit'?", "options": ["The maximum you can spend on your card", "The minimum you must pay", "Your daily withdrawal limit", "The interest rate you pay"], "correct": 0, "explanation": "Don't max out your card, it's not the aesthetic! 🛑"},
         {"question": "What is an APR?", "options": ["Annual Percentage Rate", "Automatic Payment Receipt", "Account Premium Ratio", "Annual Profit Return"], "correct": 0, "explanation": "APR is the yearly cost of borrowing money! 📉"}
+    ],
+    "Taxes 📝": [
+        {"question": "What is 'Income Tax' giving?", "options": ["A percentage of your earnings paid to the government", "A fee for having a bank account", "A discount on your groceries", "A prize for working hard"], "correct": 0, "explanation": "Income tax is your contribution to public services like roads and hospitals! 🛣️"},
+        {"question": "What does 'Tax Deductible' mean?", "options": ["An expense that reduces your taxable income", "A tax that is deducted twice", "A way to avoid paying taxes entirely", "A fee for late tax payment"], "correct": 0, "explanation": "Deductions lower the amount of income you're taxed on. We love a legal discount! 💸"},
+        {"question": "What is a 'TDS'?", "options": ["Tax Deducted at Source", "Total Debt Status", "Tax Discount System", "Terminal Debt Service"], "correct": 0, "explanation": "TDS is tax collected right when you earn money, like from your salary! 💼"},
+        {"question": "When is the typical deadline for tax filing in India?", "options": ["July 31st", "December 25th", "January 1st", "April 1st"], "correct": 0, "explanation": "Keep July 31st in your calendar to avoid the 'late fee' drama! 🗓️"},
+        {"question": "What is 'GST'?", "options": ["Goods and Services Tax", "General Savings Tax", "Government Service Token", "Grand Sales Tax"], "correct": 0, "explanation": "GST is the tax you pay on most things you buy! 🛍️"}
     ]
 }
 
