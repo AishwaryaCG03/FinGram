@@ -95,8 +95,27 @@ def get_top_scores():
     return scores
 
 quiz_questions = {
-    "Budgeting": [{"question": "What's giving 'main character energy' in a 50/30/20 budget rule?", "options": ["50% needs, 30% wants, 20% savings", "50% wants, 30% savings, 20% needs", "50% savings, 30% needs, 20% wants", "50% vibes, 30% aesthetic, 20% reality"], "correct": 0, "explanation": "50% for needs, 30% for wants, and 20% for savings! 💅"}, {"question": "Emergency fund should cover how many months?", "options": ["1 month", "3-6 months", "12 months", "0 months"], "correct": 1, "explanation": "3-6 months is giving responsible queen energy! 👑"}],
-    "Investing": [{"question": "Which investment is giving 'long-term relationship' vibes?", "options": ["Day trading", "Index funds", "Penny stocks", "Friend's startup"], "correct": 1, "explanation": "Index funds are stable and reliable! 💍"}]
+    "Budgeting": [
+        {"question": "What's giving 'main character energy' in a 50/30/20 budget rule?", "options": ["50% needs, 30% wants, 20% savings", "50% wants, 30% savings, 20% needs", "50% savings, 30% needs, 20% wants", "50% vibes, 30% aesthetic, 20% reality"], "correct": 0, "explanation": "50% for needs, 30% for wants, and 20% for savings! 💅"},
+        {"question": "Emergency fund should cover how many months?", "options": ["1 month", "3-6 months", "12 months", "0 months"], "correct": 1, "explanation": "3-6 months is giving responsible queen energy! 👑"},
+        {"question": "What's a 'sunk cost' in your financial era?", "options": ["Money already spent that can't be recovered", "The cost of a new sink", "A type of high-interest loan", "Money you're planning to spend"], "correct": 0, "explanation": "Sunk costs are gone, bestie. Don't throw good money after bad! 🚫"},
+        {"question": "Which of these is a 'variable expense'?", "options": ["Rent", "Netflix subscription", "Dining out", "Car insurance"], "correct": 2, "explanation": "Dining out changes every month depending on your vibes! 🍕"},
+        {"question": "What does 'paying yourself first' mean?", "options": ["Buying a new outfit on payday", "Saving money before spending on anything else", "Paying your bills on time", "Treating your friends to dinner"], "correct": 1, "explanation": "Put that money in savings first to secure the future bag! 💰"}
+    ],
+    "Investing": [
+        {"question": "Which investment is giving 'long-term relationship' vibes?", "options": ["Day trading", "Index funds", "Penny stocks", "Friend's startup"], "correct": 1, "explanation": "Index funds are stable and reliable! 💍"},
+        {"question": "What is 'diversification'?", "options": ["Investing only in tech stocks", "Spreading money across different assets", "Keeping all money in a savings account", "Buying only Bitcoin"], "correct": 1, "explanation": "Don't put all your eggs in one basket, it's not the vibe! 🥚"},
+        {"question": "What is a 'bull market'?", "options": ["When prices are falling", "When prices are rising", "When the market is closed", "A market for agricultural products"], "correct": 1, "explanation": "Bull markets are charging up! 📈"},
+        {"question": "What does ROI stand for?", "options": ["Risk of Investment", "Return on Investment", "Rate of Interest", "Really Over-Invested"], "correct": 1, "explanation": "Return on Investment - we love to see that bag grow! 💸"},
+        {"question": "Which of these is generally the highest risk?", "options": ["Savings Account", "Government Bonds", "Individual Stocks", "Fixed Deposits"], "correct": 2, "explanation": "Stocks can be a rollercoaster, stay safe! 🎢"}
+    ],
+    "Credit": [
+        {"question": "What's a good credit score giving?", "options": ["Lower interest rates on loans", "Free coffee at Starbucks", "More followers on TikTok", "Higher taxes"], "correct": 0, "explanation": "A high score gets you the best deals on loans! 💳"},
+        {"question": "What is 'compound interest'?", "options": ["Interest on the principal only", "Interest on interest", "A type of bank fee", "Tax on your savings"], "correct": 1, "explanation": "Interest on interest makes your money grow exponentially! ❄️"},
+        {"question": "Which factor affects your credit score the most?", "options": ["Your income", "Payment history", "The bank you use", "Your age"], "correct": 1, "explanation": "Pay those bills on time to keep your score iconic! ✅"},
+        {"question": "What's a 'credit limit'?", "options": ["The maximum you can spend on your card", "The minimum you must pay", "Your daily withdrawal limit", "The interest rate you pay"], "correct": 0, "explanation": "Don't max out your card, it's not the aesthetic! 🛑"},
+        {"question": "What is an APR?", "options": ["Annual Percentage Rate", "Automatic Payment Receipt", "Account Premium Ratio", "Annual Profit Return"], "correct": 0, "explanation": "APR is the yearly cost of borrowing money! 📉"}
+    ]
 }
 
 def finance_quiz():
@@ -105,43 +124,77 @@ def finance_quiz():
         return
     init_quiz_db()
     st.title(" Financial Knowledge Check")
+    
+    # Initialize session state for quiz
     if 'quiz_score' not in st.session_state: st.session_state.quiz_score = 0
     if 'questions_answered' not in st.session_state: st.session_state.questions_answered = 0
     if 'quiz_complete' not in st.session_state: st.session_state.quiz_complete = False
     if 'selected_category' not in st.session_state: st.session_state.selected_category = None
+    if 'current_quiz_questions' not in st.session_state: st.session_state.current_quiz_questions = []
+
     if not st.session_state.selected_category:
+        st.subheader("Pick your category bestie! 💅")
         categories = list(quiz_questions.keys())
         cols = st.columns(len(categories))
         for i, category in enumerate(categories):
             if cols[i].button(f"{category} ", key=f"cat_{category}"):
-                st.session_state.selected_category, st.session_state.quiz_score, st.session_state.questions_answered, st.session_state.quiz_complete = category, 0, 0, False
+                # Randomly select 3 questions from the category
+                all_cat_questions = quiz_questions[category]
+                st.session_state.current_quiz_questions = random.sample(all_cat_questions, min(3, len(all_cat_questions)))
+                st.session_state.selected_category = category
+                st.session_state.quiz_score = 0
+                st.session_state.questions_answered = 0
+                st.session_state.quiz_complete = False
                 st.rerun()
     elif not st.session_state.quiz_complete:
         category = st.session_state.selected_category
-        questions = quiz_questions[category]
+        questions = st.session_state.current_quiz_questions
+        
         if st.session_state.questions_answered < len(questions):
             q_data = questions[st.session_state.questions_answered]
+            st.markdown(f"### Question {st.session_state.questions_answered + 1}")
             st.markdown(f"**{q_data['question']}**")
-            cols = st.columns(2)
-            selected = None
-            for i, opt in enumerate(q_data['options']):
-                if cols[i % 2].button(opt, key=f"opt_{i}"): selected = i
-            if selected is not None:
-                if selected == q_data['correct']:
-                    st.success("Yasss queen! ✨")
-                    st.session_state.quiz_score += 1
-                else: st.error("Not the serve bestie! 💁‍♀️")
-                st.info(q_data['explanation'])
-                st.session_state.questions_answered += 1
-                if st.session_state.questions_answered < len(questions):
-                    if st.button("Next Question"): st.rerun()
-                else:
-                    st.session_state.quiz_complete = True
-                    save_score(st.session_state.username, st.session_state.quiz_score, len(questions), category)
-                    st.rerun()
+            
+            # Use radio for options to avoid instant rerun on button click before showing explanation
+            options_with_none = ["Select an option..."] + q_data['options']
+            choice = st.radio("Choose the correct vibe:", options_with_none, key=f"q_{st.session_state.questions_answered}")
+            
+            if choice != "Select an option...":
+                selected_idx = q_data['options'].index(choice)
+                if st.button("Submit Answer"):
+                    if selected_idx == q_data['correct']:
+                        st.success("Yasss queen! ✨")
+                        st.session_state.quiz_score += 1
+                    else:
+                        st.error("Not the serve bestie! 💁‍♀️")
+                    
+                    st.info(q_data['explanation'])
+                    st.session_state.questions_answered += 1
+                    
+                    if st.session_state.questions_answered < len(questions):
+                        if st.button("Next Question"):
+                            st.rerun()
+                    else:
+                        st.session_state.quiz_complete = True
+                        save_score(st.session_state.username, st.session_state.quiz_score, len(questions), category)
+                        st.rerun()
     else:
-        st.success(f"Score: {st.session_state.quiz_score}/{len(quiz_questions[st.session_state.selected_category])}")
-        if st.button("New Category"): st.session_state.selected_category, st.session_state.quiz_score, st.session_state.questions_answered, st.session_state.quiz_complete = None, 0, 0, False; st.rerun()
+        st.balloons()
+        st.success(f"Final Score: {st.session_state.quiz_score}/{len(st.session_state.current_quiz_questions)}")
+        if st.session_state.quiz_score == len(st.session_state.current_quiz_questions):
+            st.markdown("### 👑 TOTAL SLAY! You're a financial icon! 👑")
+        elif st.session_state.quiz_score > 0:
+            st.markdown("### 💅 Good vibes! You're getting that bag! 💅")
+        else:
+            st.markdown("### ☕ Time to study the tea, bestie! ☕")
+            
+        if st.button("New Category"):
+            st.session_state.selected_category = None
+            st.session_state.quiz_score = 0
+            st.session_state.questions_answered = 0
+            st.session_state.quiz_complete = False
+            st.session_state.current_quiz_questions = []
+            st.rerun()
 
 # --- Investment Vibes Section ---
 def fetch_ticker_data(tickers):
