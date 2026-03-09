@@ -34,43 +34,116 @@ def meme_gallery():
     if not st.session_state.logged_in:
         st.error("Bestie, login first! 🫖")
         return
-    st.title("💅 Financial Memes That Hit Different")
+    
+    st.title("💅 The FinTok Feed")
+    st.markdown("### Scroll for the financial tea! ☕🔥")
+
+    # Spotlight Section: Meme of the Day
+    st.markdown("---")
+    st.markdown("## 👑 Meme of the Day 👑")
+    spotlight_meme = {
+        "category": "Savings",
+        "index": 2,
+        "caption": "That moment when your emergency fund is looking thicker than your ex 💅",
+        "tag": "Iconic Behavior"
+    }
+    
+    with st.container():
+        st.markdown(
+            f"""
+            <div style="background-color: #1e1e1e; padding: 20px; border-radius: 15px; border: 2px solid #FF3B5C; text-align: center; margin-bottom: 20px;">
+                <h2 style="color: #FF3B5C; margin-bottom: 10px;">{spotlight_meme['tag']} ✨</h2>
+                <p style="font-size: 24px; font-weight: bold; color: white;">"{spotlight_meme['caption']}"</p>
+                <div style="height: 200px; background: linear-gradient(45deg, #FF3B5C, #00F2EA); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 50px;">🤑💰💸</span>
+                </div>
+            </div>
+            """, 
+            unsafe_allow_html=True
+        )
+        # Engagement for spotlight
+        likes, comments_count, _ = get_engagement_counts(spotlight_meme['category'], spotlight_meme['index'])
+        col1, col2, col3 = st.columns([1, 1, 4])
+        with col1:
+            if st.button(f"❤️ {likes}", key="spotlight_like"):
+                save_engagement(st.session_state.username, spotlight_meme['category'], spotlight_meme['index'], "like")
+                st.rerun()
+        with col2:
+            if st.button(f"💬 {comments_count}", key="spotlight_comment"):
+                st.session_state["show_spotlight_comments"] = not st.session_state.get("show_spotlight_comments", False)
+        
+        if st.session_state.get("show_spotlight_comments", False):
+            with st.expander("💭 Spotlight Tea", expanded=True):
+                for user, text in get_comments(spotlight_meme['category'], spotlight_meme['index']):
+                    st.markdown(f"**{user}**: {text}")
+
+    st.markdown("---")
+    
+    # Filter by category
     meme_categories = {
         "Savings": ["Me looking at my bank account after saying 'treat yourself' 👀", "My savings account watching me buy another iced coffee ☕", "That moment when your emergency fund is looking thicker than your ex 💅"],
         "Investing": ["Stock market be like: 📈📉 and I be like: 🙃", "Me pretending to understand crypto while buying the dip 🤡", "When someone says they're investing in their 401k: 'It's giving responsible' ✨"],
         "Budgeting": ["My budget: exists\nMe: I pretend I do not see it 👩‍🦯", "When you make a budget but forget about existing ✌️", "That moment when you realize adulting requires actual money management 😭"]
     }
-    tabs = st.tabs(list(meme_categories.keys()))
-    for tab, (category, captions) in zip(tabs, meme_categories.items()):
-        with tab:
-            st.header(f"{category} Memes 🔥")
-            cols = st.columns(2)
-            for i, caption in enumerate(captions):
-                with cols[i % 2]:
-                    st.markdown(f"### {caption}")
-                    st.markdown("*[Meme placeholder]*")
-                    likes, comments_count, shares = get_engagement_counts(category, i)
-                    eng_col1, eng_col2, eng_col3 = st.columns(3)
-                    with eng_col1:
-                        if st.button(f"❤️ {likes}", key=f"like_{category}_{i}"):
-                            save_engagement(st.session_state.username, category, i, "like")
+    
+    selected_cat = st.radio("What's the vibe today?", ["All"] + list(meme_categories.keys()), horizontal=True)
+    
+    st.markdown("### Trending Now 🚀")
+    
+    # Flatten memes for the feed
+    all_memes = []
+    for cat, captions in meme_categories.items():
+        if selected_cat == "All" or selected_cat == cat:
+            for i, cap in enumerate(captions):
+                all_memes.append({"category": cat, "index": i, "caption": cap})
+    
+    # Shuffle for a "discovery" feel if looking at All
+    if selected_cat == "All":
+        random.seed(42) # Keep it consistent for the session
+        random.shuffle(all_memes)
+
+    # Vertical Feed
+    for i, meme in enumerate(all_memes):
+        with st.container():
+            st.markdown(
+                f"""
+                <div style="background-color: #262626; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #00F2EA;">
+                    <span style="background-color: #00F2EA; color: black; padding: 2px 8px; border-radius: 5px; font-size: 12px; font-weight: bold;">#{meme['category']}</span>
+                    <p style="font-size: 18px; margin-top: 10px;">{meme['caption']}</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            
+            likes, comments_count, _ = get_engagement_counts(meme['category'], meme['index'])
+            
+            eng_col1, eng_col2, eng_col3, _ = st.columns([1, 1, 1, 3])
+            with eng_col1:
+                if st.button(f"❤️ {likes}", key=f"feed_like_{i}"):
+                    save_engagement(st.session_state.username, meme['category'], meme['index'], "like")
+                    st.rerun()
+            with eng_col2:
+                if st.button(f"💬 {comments_count}", key=f"feed_comment_btn_{i}"):
+                    st.session_state[f"show_feed_comments_{i}"] = not st.session_state.get(f"show_feed_comments_{i}", False)
+            with eng_col3:
+                share_links = get_social_share_links(meme['caption'])
+                share_platform = st.selectbox("Share", ["Share 🔄"] + list(share_links.keys()), key=f"feed_share_{i}", label_visibility="collapsed")
+                if share_platform != "Share 🔄":
+                    st.markdown(f"[Send It! 🚀]({share_links[share_platform]})")
+                    save_engagement(st.session_state.username, meme['category'], meme['index'], "share")
+            
+            if st.session_state.get(f"show_feed_comments_{i}", False):
+                with st.expander("� The Comments Section", expanded=True):
+                    comment = st.text_input("Spill the tea... 💅", key=f"feed_input_{i}")
+                    if st.button("Post 🚀", key=f"feed_post_{i}"):
+                        if comment:
+                            save_engagement(st.session_state.username, meme['category'], meme['index'], "comment", comment)
                             st.rerun()
-                    with eng_col2:
-                        if st.button(f"💬 {comments_count}", key=f"comment_btn_{category}_{i}"):
-                            st.session_state[f"show_comments_{category}_{i}"] = True
-                    with eng_col3:
-                        share_links = get_social_share_links(caption)
-                        share_platform = st.selectbox("Share", ["Share 🔄"] + list(share_links.keys()), key=f"share_select_{category}_{i}")
-                        if share_platform != "Share 🔄":
-                            st.markdown(f"[Share on {share_platform}]({share_links[share_platform]})")
-                            save_engagement(st.session_state.username, category, i, "share")
-                    if st.session_state.get(f"show_comments_{category}_{i}", False):
-                        with st.expander("💭 Comments", expanded=True):
-                            comment = st.text_input("Thoughts? 💅", key=f"comment_input_{category}_{i}")
-                            if st.button("Post 🚀", key=f"post_comment_{category}_{i}"):
-                                save_engagement(st.session_state.username, category, i, "comment", comment)
-                                st.rerun()
-                            for user, text in get_comments(category, i): st.markdown(f"**{user}**: {text}")
+                    
+                    for user, text in get_comments(meme['category'], meme['index']):
+                        st.markdown(f"**{user}**: {text}")
+            
+            st.markdown("<br>", unsafe_allow_html=True)
 
 # --- Finance Quiz Section ---
 def init_quiz_db():
