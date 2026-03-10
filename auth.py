@@ -24,6 +24,22 @@ def init_db():
                   comment_text TEXT,
                   FOREIGN KEY (username) REFERENCES users(username))''')
     
+    # Check if is_user_meme column exists in engagement table
+    c.execute("PRAGMA table_info(engagement)")
+    columns = [column[1] for column in c.fetchall()]
+    if 'is_user_meme' not in columns:
+        c.execute("ALTER TABLE engagement ADD COLUMN is_user_meme INTEGER DEFAULT 0")
+    
+    # Create user_memes table
+    c.execute('''CREATE TABLE IF NOT EXISTS user_memes
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  username TEXT,
+                  category TEXT,
+                  caption TEXT,
+                  image_path TEXT,
+                  created_at TIMESTAMP,
+                  FOREIGN KEY (username) REFERENCES users(username))''')
+    
     conn.commit()
     conn.close()
 
@@ -71,47 +87,47 @@ def register_user(username, password, email):
         return False
 
 # Save engagement (likes, comments, shares)
-def save_engagement(username, meme_category, meme_index, engagement_type, comment_text=None):
+def save_engagement(username, meme_category, meme_index, engagement_type, comment_text=None, is_user_meme=0):
     conn = sqlite3.connect('genz_finance.db')
     c = conn.cursor()
     
     c.execute('''INSERT INTO engagement 
-                 (username, meme_category, meme_index, engagement_type, comment_text)
-                 VALUES (?, ?, ?, ?, ?)''',
-              (username, meme_category, meme_index, engagement_type, comment_text))
+                 (username, meme_category, meme_index, engagement_type, comment_text, is_user_meme)
+                 VALUES (?, ?, ?, ?, ?, ?)''',
+              (username, meme_category, meme_index, engagement_type, comment_text, is_user_meme))
     
     conn.commit()
     conn.close()
 
 # Get engagement counts
-def get_engagement_counts(meme_category, meme_index):
+def get_engagement_counts(meme_category, meme_index, is_user_meme=0):
     conn = sqlite3.connect('genz_finance.db')
     c = conn.cursor()
     
     likes = c.execute('''SELECT COUNT(*) FROM engagement 
-                        WHERE meme_category=? AND meme_index=? AND engagement_type='like' ''',
-                     (meme_category, meme_index)).fetchone()[0]
+                        WHERE meme_category=? AND meme_index=? AND engagement_type='like' AND is_user_meme=? ''',
+                     (meme_category, meme_index, is_user_meme)).fetchone()[0]
     
     comments = c.execute('''SELECT COUNT(*) FROM engagement 
-                           WHERE meme_category=? AND meme_index=? AND engagement_type='comment' ''',
-                        (meme_category, meme_index)).fetchone()[0]
+                           WHERE meme_category=? AND meme_index=? AND engagement_type='comment' AND is_user_meme=? ''',
+                        (meme_category, meme_index, is_user_meme)).fetchone()[0]
     
     shares = c.execute('''SELECT COUNT(*) FROM engagement 
-                         WHERE meme_category=? AND meme_index=? AND engagement_type='share' ''',
-                      (meme_category, meme_index)).fetchone()[0]
+                         WHERE meme_category=? AND meme_index=? AND engagement_type='share' AND is_user_meme=? ''',
+                      (meme_category, meme_index, is_user_meme)).fetchone()[0]
     
     conn.close()
     return likes, comments, shares
 
 # Get comments for a meme
-def get_comments(meme_category, meme_index):
+def get_comments(meme_category, meme_index, is_user_meme=0):
     conn = sqlite3.connect('genz_finance.db')
     c = conn.cursor()
     
     comments = c.execute('''SELECT username, comment_text FROM engagement 
-                           WHERE meme_category=? AND meme_index=? AND engagement_type='comment'
+                           WHERE meme_category=? AND meme_index=? AND engagement_type='comment' AND is_user_meme=?
                            ORDER BY id DESC''',
-                        (meme_category, meme_index)).fetchall()
+                        (meme_category, meme_index, is_user_meme)).fetchall()
     
     conn.close()
     return comments
