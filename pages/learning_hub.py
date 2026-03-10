@@ -38,6 +38,37 @@ def meme_gallery():
     st.title("💅 The FinTok Feed")
     st.markdown("### Scroll for the financial tea! ☕🔥")
 
+    # --- Upload Your Own Meme ---
+    with st.expander("📤 Post Your Own Meme (Main Character Energy)", expanded=False):
+        uploaded_file = st.file_uploader("Upload your meme (image/gif) 🖼️", type=["png", "jpg", "jpeg", "gif"])
+        meme_caption = st.text_input("Caption your masterpiece... ✍️", placeholder="e.g. Me watching my portfolio dip but staying delulu ✨")
+        meme_cat = st.selectbox("Category", ["Savings", "Investing", "Budgeting", "Crypto", "Taxes 📝"])
+        
+        if st.button("Post to Feed 🚀"):
+            if uploaded_file and meme_caption:
+                # Save file locally
+                upload_dir = os.path.join(os.getcwd(), "uploads")
+                if not os.path.exists(upload_dir):
+                    os.makedirs(upload_dir)
+                
+                file_path = os.path.join(upload_dir, f"{st.session_state.username}_{int(time.time())}_{uploaded_file.name}")
+                with open(file_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
+                
+                # Save to DB
+                conn = sqlite3.connect('genz_finance.db')
+                c = conn.cursor()
+                c.execute('''INSERT INTO user_memes (username, category, caption, image_path, created_at)
+                             VALUES (?, ?, ?, ?, ?)''', (st.session_state.username, meme_cat, meme_caption, file_path, datetime.now()))
+                conn.commit()
+                conn.close()
+                
+                st.success("Yasss! Your meme is live! 💅")
+                time.sleep(1)
+                st.rerun()
+            else:
+                st.warning("Bestie, we need both a meme and a caption! 💁‍♀️")
+
     # Spotlight Section: Meme of the Day
     st.markdown("---")
     st.markdown("## 👑 Meme of the Day 👑")
@@ -92,10 +123,31 @@ def meme_gallery():
     
     # Flatten memes for the feed
     all_memes = []
+    
+    # 1. Add hardcoded memes
     for cat, captions in meme_categories.items():
         if selected_cat == "All" or selected_cat == cat:
             for i, cap in enumerate(captions):
-                all_memes.append({"category": cat, "index": i, "caption": cap})
+                all_memes.append({"category": cat, "index": i, "caption": cap, "is_user_meme": 0})
+    
+    # 2. Add user memes from DB
+    conn = sqlite3.connect('genz_finance.db')
+    c = conn.cursor()
+    query = "SELECT id, username, category, caption, image_path FROM user_memes"
+    if selected_cat != "All":
+        query += f" WHERE category = '{selected_cat}'"
+    user_memes_db = c.execute(query).fetchall()
+    conn.close()
+    
+    for um in user_memes_db:
+        all_memes.append({
+            "index": um[0], # Using DB ID as index for user memes
+            "username": um[1],
+            "category": um[2],
+            "caption": um[3],
+            "image_path": um[4],
+            "is_user_meme": 1
+        })
     
     # Shuffle for a "discovery" feel if looking at All
     if selected_cat == "All":
@@ -104,43 +156,53 @@ def meme_gallery():
 
     # Vertical Feed
     for i, meme in enumerate(all_memes):
+        is_user = meme.get("is_user_meme", 0)
         with st.container():
+            # Styling for the meme card
+            border_color = "#FF3B5C" if is_user else "#00F2EA"
+            user_tag = f"<br><span style='font-size: 12px; color: #888;'>Posted by @{meme['username']} ✨</span>" if is_user else ""
+            
             st.markdown(
                 f"""
-                <div style="background-color: #262626; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #00F2EA;">
-                    <span style="background-color: #00F2EA; color: black; padding: 2px 8px; border-radius: 5px; font-size: 12px; font-weight: bold;">#{meme['category']}</span>
+                <div style="background-color: #262626; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid {border_color};">
+                    <span style="background-color: {border_color}; color: black; padding: 2px 8px; border-radius: 5px; font-size: 12px; font-weight: bold;">#{meme['category']}</span>
                     <p style="font-size: 18px; margin-top: 10px;">{meme['caption']}</p>
+                    {user_tag}
                 </div>
                 """,
                 unsafe_allow_html=True
             )
             
-            likes, comments_count, _ = get_engagement_counts(meme['category'], meme['index'])
+            # Display image if it's a user meme
+            if is_user and meme.get('image_path') and os.path.exists(meme['image_path']):
+                st.image(meme['image_path'], use_container_width=True)
+            
+            likes, comments_count, _ = get_engagement_counts(meme['category'], meme['index'], is_user_meme=is_user)
             
             eng_col1, eng_col2, eng_col3, _ = st.columns([1, 1, 1, 3])
             with eng_col1:
-                if st.button(f"❤️ {likes}", key=f"feed_like_{i}"):
-                    save_engagement(st.session_state.username, meme['category'], meme['index'], "like")
+                if st.button(f"❤️ {likes}", key=f"feed_like_{i}_{is_user}"):
+                    save_engagement(st.session_state.username, meme['category'], meme['index'], "like", is_user_meme=is_user)
                     st.rerun()
             with eng_col2:
-                if st.button(f"💬 {comments_count}", key=f"feed_comment_btn_{i}"):
-                    st.session_state[f"show_feed_comments_{i}"] = not st.session_state.get(f"show_feed_comments_{i}", False)
+                if st.button(f"💬 {comments_count}", key=f"feed_comment_btn_{i}_{is_user}"):
+                    st.session_state[f"show_feed_comments_{i}_{is_user}"] = not st.session_state.get(f"show_feed_comments_{i}_{is_user}", False)
             with eng_col3:
                 share_links = get_social_share_links(meme['caption'])
-                share_platform = st.selectbox("Share", ["Share 🔄"] + list(share_links.keys()), key=f"feed_share_{i}", label_visibility="collapsed")
+                share_platform = st.selectbox("Share", ["Share 🔄"] + list(share_links.keys()), key=f"feed_share_{i}_{is_user}", label_visibility="collapsed")
                 if share_platform != "Share 🔄":
                     st.markdown(f"[Send It! 🚀]({share_links[share_platform]})")
-                    save_engagement(st.session_state.username, meme['category'], meme['index'], "share")
+                    save_engagement(st.session_state.username, meme['category'], meme['index'], "share", is_user_meme=is_user)
             
-            if st.session_state.get(f"show_feed_comments_{i}", False):
+            if st.session_state.get(f"show_feed_comments_{i}_{is_user}", False):
                 with st.expander("� The Comments Section", expanded=True):
-                    comment = st.text_input("Spill the tea... 💅", key=f"feed_input_{i}")
-                    if st.button("Post 🚀", key=f"feed_post_{i}"):
+                    comment = st.text_input("Spill the tea... 💅", key=f"feed_input_{i}_{is_user}")
+                    if st.button("Post 🚀", key=f"feed_post_{i}_{is_user}"):
                         if comment:
-                            save_engagement(st.session_state.username, meme['category'], meme['index'], "comment", comment)
+                            save_engagement(st.session_state.username, meme['category'], meme['index'], "comment", comment, is_user_meme=is_user)
                             st.rerun()
                     
-                    for user, text in get_comments(meme['category'], meme['index']):
+                    for user, text in get_comments(meme['category'], meme['index'], is_user_meme=is_user):
                         st.markdown(f"**{user}**: {text}")
             
             st.markdown("<br>", unsafe_allow_html=True)
