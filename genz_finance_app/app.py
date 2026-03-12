@@ -26,7 +26,7 @@ st.markdown("""
         color: #ffffff;
     }
     .stButton button {
-        background-color: #FF3B5C;
+        background-color: #BC13FE;
         color: white;
         border-radius: 20px;
         padding: 10px 20px;
@@ -34,7 +34,7 @@ st.markdown("""
     }
     .stTitle {
         font-family: 'Arial Black', sans-serif;
-        color: #FF3B5C;
+        color: #BC13FE;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -56,7 +56,7 @@ else:
     # Sidebar for navigation
     st.sidebar.title("Vibe Check ✨")
     page = st.sidebar.selectbox(
-        "What's the tea?",
+        "What's the talk?",
         ["Home", "Money Memes", "Savings Calculator", "Investment Vibes"]
     )
 
@@ -64,12 +64,12 @@ else:
         col1, col2 = st.columns(2)
         
         with col1:
-            st.header(f"Today's Financial Tea ☕")
+            st.header(f"Today's Financial Talk ☕")
             st.markdown(f"""
             Hey **{st.session_state.username}**, ready to get that bag? 
             
-            - 💅 **Emergency Fund**: Your 'toxic ex was right' backup plan
-            - 🎭 **Investing**: Making your money work harder than your situationship
+            - ✨ **Emergency Fund**: Your 'toxic debt was right' backup plan
+            - 🎭 **Investing**: Making your money work harder than your backup plan
             - 💸 **Budgeting**: Main character energy for your wallet
             """)
         
@@ -78,7 +78,7 @@ else:
             st.metric(
                 label="Savings Challenge",
                 value="$100",
-                delta="Better than your ex's credit score"
+                delta="Better than your average credit score"
             )
 
     elif page == "Money Memes":
@@ -89,8 +89,8 @@ else:
         
     elif page == "Investment Vibes":
         st.header("Investment Vibes Check ✨")
-        st.markdown("Coming soon bestie! We're making it extra spicy! 🌶️")
+        st.markdown("Coming soon! We're making it extra legendary! 🚀")
 
     # Footer
     st.markdown("---")
-    st.markdown("Made with by a bestie who wants you to get that bag") 
+    st.markdown("Made with by a friend who wants you to get that bag") 

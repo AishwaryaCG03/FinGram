@@ -20,7 +20,7 @@ yf.set_tz_cache_location(cache_dir)
 
 # --- Meme Gallery Section ---
 def get_social_share_links(caption, hashtags=None):
-    if hashtags is None: hashtags = ["FinTok", "MoneyMoves", "RichGirlEra", "FinanceCheck"]
+    if hashtags is None: hashtags = ["FinTok", "MoneyMoves", "SecureTheBag", "FinanceCheck"]
     encoded_caption = urllib.parse.quote(caption)
     encoded_hashtags = urllib.parse.quote(" ".join(f"#{tag}" for tag in hashtags))
     return {
@@ -32,14 +32,14 @@ def get_social_share_links(caption, hashtags=None):
 
 def meme_gallery():
     if not st.session_state.logged_in:
-        st.error("Bestie, login first! 🫖")
+        st.error("Log in first! 🫖")
         return
     
-    st.title("💅 The FinTok Feed")
-    st.markdown("### Scroll for the financial tea! ☕🔥")
+    st.title("� The FinTok Feed")
+    st.markdown("### Scroll for the financial facts! ☕🔥")
 
     # --- Upload Your Own Meme ---
-    with st.expander("📤 Post Your Own Meme (Main Character Energy)", expanded=False):
+    with st.expander("📤 Post Your Own Meme (Legend Status)", expanded=False):
         uploaded_file = st.file_uploader("Upload your meme (image/gif) 🖼️", type=["png", "jpg", "jpeg", "gif"])
         meme_caption = st.text_input("Caption your masterpiece... ✍️", placeholder="e.g. Me watching my portfolio dip but staying delulu ✨")
         meme_cat = st.selectbox("Category", ["Savings", "Investing", "Budgeting", "Crypto", "Taxes 📝"])
@@ -63,29 +63,29 @@ def meme_gallery():
                 conn.commit()
                 conn.close()
                 
-                st.success("Yasss! Your meme is live! 💅")
+                st.success("Legendary! Your meme is live! 🚀")
                 time.sleep(1)
                 st.rerun()
             else:
-                st.warning("Bestie, we need both a meme and a caption! 💁‍♀️")
+                st.warning("We need both a meme and a caption! 🧐")
 
     # Spotlight Section: Meme of the Day
     st.markdown("---")
-    st.markdown("## 👑 Meme of the Day 👑")
+    st.markdown("## � Meme of the Day �")
     spotlight_meme = {
         "category": "Savings",
         "index": 2,
-        "caption": "That moment when your emergency fund is looking thicker than your ex 💅",
+        "caption": "That moment when your emergency fund is looking thicker than your monthly bills 💰",
         "tag": "Iconic Behavior"
     }
     
     with st.container():
         st.markdown(
             f"""
-            <div style="background-color: #1e1e1e; padding: 20px; border-radius: 15px; border: 2px solid #FF3B5C; text-align: center; margin-bottom: 20px;">
-                <h2 style="color: #FF3B5C; margin-bottom: 10px;">{spotlight_meme['tag']} ✨</h2>
+            <div style="background-color: #1e1e1e; padding: 20px; border-radius: 15px; border: 2px solid #BC13FE; text-align: center; margin-bottom: 20px;">
+                <h2 style="color: #BC13FE; margin-bottom: 10px;">{spotlight_meme['tag']} ✨</h2>
                 <p style="font-size: 24px; font-weight: bold; color: white;">"{spotlight_meme['caption']}"</p>
-                <div style="height: 200px; background: linear-gradient(45deg, #FF3B5C, #00F2EA); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <div style="height: 200px; background: linear-gradient(45deg, #BC13FE, #39FF14); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                     <span style="font-size: 50px;">🤑💰💸</span>
                 </div>
             </div>
@@ -104,7 +104,7 @@ def meme_gallery():
                 st.session_state["show_spotlight_comments"] = not st.session_state.get("show_spotlight_comments", False)
         
         if st.session_state.get("show_spotlight_comments", False):
-            with st.expander("💭 Spotlight Tea", expanded=True):
+            with st.expander("💭 Spotlight Talk", expanded=True):
                 for user, text in get_comments(spotlight_meme['category'], spotlight_meme['index']):
                     st.markdown(f"**{user}**: {text}")
 
@@ -112,7 +112,7 @@ def meme_gallery():
     
     # Filter by category
     meme_categories = {
-        "Savings": ["Me looking at my bank account after saying 'treat yourself' 👀", "My savings account watching me buy another iced coffee ☕", "That moment when your emergency fund is looking thicker than your ex 💅"],
+        "Savings": ["Me looking at my bank account after saying 'treat yourself' 👀", "My savings account watching me buy another iced coffee ☕", "That moment when your emergency fund is looking thicker than your monthly bills 💰"],
         "Investing": ["Stock market be like: 📈📉 and I be like: 🙃", "Me pretending to understand crypto while buying the dip 🤡", "When someone says they're investing in their 401k: 'It's giving responsible' ✨"],
         "Budgeting": ["My budget: exists\nMe: I pretend I do not see it 👩‍🦯", "When you make a budget but forget about existing ✌️", "That moment when you realize adulting requires actual money management 😭"]
     }
@@ -159,7 +159,7 @@ def meme_gallery():
         is_user = meme.get("is_user_meme", 0)
         with st.container():
             # Styling for the meme card
-            border_color = "#FF3B5C" if is_user else "#00F2EA"
+            border_color = "#BC13FE" if is_user else "#39FF14"
             user_tag = f"<br><span style='font-size: 12px; color: #888;'>Posted by @{meme['username']} ✨</span>" if is_user else ""
             
             st.markdown(
@@ -195,8 +195,8 @@ def meme_gallery():
                     save_engagement(st.session_state.username, meme['category'], meme['index'], "share", is_user_meme=is_user)
             
             if st.session_state.get(f"show_feed_comments_{i}_{is_user}", False):
-                with st.expander("� The Comments Section", expanded=True):
-                    comment = st.text_input("Spill the tea... 💅", key=f"feed_input_{i}_{is_user}")
+                with st.expander("💭 The Comments Section", expanded=True):
+                    comment = st.text_input("Share your thoughts... ✨", key=f"feed_input_{i}_{is_user}")
                     if st.button("Post 🚀", key=f"feed_post_{i}_{is_user}"):
                         if comment:
                             save_engagement(st.session_state.username, meme['category'], meme['index'], "comment", comment, is_user_meme=is_user)
@@ -231,9 +231,9 @@ def get_top_scores():
 
 quiz_questions = {
     "Budgeting": [
-        {"question": "What's giving 'main character energy' in a 50/30/20 budget rule?", "options": ["50% needs, 30% wants, 20% savings", "50% wants, 30% savings, 20% needs", "50% savings, 30% needs, 20% wants", "50% vibes, 30% aesthetic, 20% reality"], "correct": 0, "explanation": "50% for needs, 30% for wants, and 20% for savings! 💅"},
-        {"question": "Emergency fund should cover how many months?", "options": ["1 month", "3-6 months", "12 months", "0 months"], "correct": 1, "explanation": "3-6 months is giving responsible queen energy! 👑"},
-        {"question": "What's a 'sunk cost' in your financial era?", "options": ["Money already spent that can't be recovered", "The cost of a new sink", "A type of high-interest loan", "Money you're planning to spend"], "correct": 0, "explanation": "Sunk costs are gone, bestie. Don't throw good money after bad! 🚫"},
+        {"question": "What's giving 'main character energy' in a 50/30/20 budget rule?", "options": ["50% needs, 30% wants, 20% savings", "50% wants, 30% savings, 20% needs", "50% savings, 30% needs, 20% wants", "50% vibes, 30% aesthetic, 20% reality"], "correct": 0, "explanation": "50% for needs, 30% for wants, and 20% for savings! ✨"},
+        {"question": "Emergency fund should cover how many months?", "options": ["1 month", "3-6 months", "12 months", "0 months"], "correct": 1, "explanation": "3-6 months is giving responsible legend energy! �"},
+        {"question": "What's a 'sunk cost' in your financial era?", "options": ["Money already spent that can't be recovered", "The cost of a new sink", "A type of high-interest loan", "Money you're planning to spend"], "correct": 0, "explanation": "Sunk costs are gone, friend. Don't throw good money after bad! 🚫"},
         {"question": "Which of these is a 'variable expense'?", "options": ["Rent", "Netflix subscription", "Dining out", "Car insurance"], "correct": 2, "explanation": "Dining out changes every month depending on your vibes! 🍕"},
         {"question": "What does 'paying yourself first' mean?", "options": ["Buying a new outfit on payday", "Saving money before spending on anything else", "Paying your bills on time", "Treating your friends to dinner"], "correct": 1, "explanation": "Put that money in savings first to secure the future bag! 💰"},
         {"question": "What is 'lifestyle creep'?", "options": ["When your spending increases as your income increases", "A scary movie about budgeting", "When you sneak into a VIP lounge", "The cost of moving to a new city"], "correct": 0, "explanation": "Don't let your expenses grow as fast as your bag! 🛑"},
@@ -243,12 +243,12 @@ quiz_questions = {
         {"question": "What is 'gross income'?", "options": ["Income that is disgusting", "Income after taxes", "Income before taxes and deductions", "Income from side hustles only"], "correct": 2, "explanation": "Gross is the big number before the government takes their cut! 💸"},
         {"question": "What is 'net income'?", "options": ["Income from fishing", "Income before taxes", "Your actual take-home pay after taxes", "Income from the internet"], "correct": 2, "explanation": "Net is what actually hits your bank account! 📥"},
         {"question": "What's an 'envelope system'?", "options": ["Sending letters to your bank", "Using physical envelopes for cash budgeting", "A type of digital filing", "Hiding money in envelopes"], "correct": 1, "explanation": "Old school but effective for tracking cash! ✉️"},
-        {"question": "What is 'discretionary spending'?", "options": ["Money spent on needs", "Money spent on wants and fun", "Money spent on taxes", "Money spent on rent"], "correct": 1, "explanation": "This is your 'treat yourself' fund! 💅"},
+        {"question": "What is 'discretionary spending'?", "options": ["Money spent on needs", "Money spent on wants and fun", "Money spent on taxes", "Money spent on rent"], "correct": 1, "explanation": "This is your 'treat yourself' fund! ✨"},
         {"question": "What's a 'sinking fund'?", "options": ["A fund for a boat", "Saving small amounts for a specific future expense", "A fund that is losing money", "A type of insurance"], "correct": 1, "explanation": "Saving for that vacation or new iPhone bit by bit! 📱"},
         {"question": "What is 'inflation'?", "options": ["When your bank account grows", "When the general price of goods increases", "When taxes are lowered", "When the stock market crashes"], "correct": 1, "explanation": "Inflation makes your coins buy less over time! 🎈"},
         {"question": "What's the '30-day rule'?", "options": ["Wait 30 days before making a non-essential purchase", "Pay your bills in 30 days", "Save for 30 days only", "A 30-day fitness challenge"], "correct": 0, "explanation": "Wait 30 days to see if you actually want it or if it's just an impulse! ⏳"},
         {"question": "What is 'debt-to-income ratio'?", "options": ["Your total debt divided by your gross income", "Your income divided by your debt", "A way to avoid debt", "The interest rate on your debt"], "correct": 0, "explanation": "Lenders use this to see if you can handle more credit! ⚖️"},
-        {"question": "What does it mean to 'reconcile' your budget?", "options": ["To delete your budget", "To compare your actual spending with your planned budget", "To ask for a loan", "To pay off all debt"], "correct": 1, "explanation": "Checking if you actually stayed on track bestie! ✅"},
+        {"question": "What does it mean to 'reconcile' your budget?", "options": ["To delete your budget", "To compare your actual spending with your planned budget", "To ask for a loan", "To pay off all debt"], "correct": 1, "explanation": "Checking if you actually stayed on track friend! ✅"},
         {"question": "What is a 'liquid asset'?", "options": ["Money kept in a bottle", "Assets that can be quickly converted to cash", "A type of crypto coin", "Investments in water companies"], "correct": 1, "explanation": "Cash in your bank is the most liquid asset! 💧"},
         {"question": "What's the purpose of an 'audit'?", "options": ["To get a free loan", "An official inspection of financial accounts", "A way to increase your salary", "A type of bank meeting"], "correct": 1, "explanation": "Making sure the numbers add up correctly! 🧐"},
         {"question": "What is 'opportunity cost'?", "options": ["The cost of a new opportunity", "What you give up when you choose one option over another", "The price of a job application", "A type of investment fee"], "correct": 1, "explanation": "Buying that bag means you can't invest that money. Choose wisely! 🛍️"},
@@ -267,19 +267,19 @@ quiz_questions = {
         {"question": "What are 'dividends'?", "options": ["Fees you pay to brokers", "Payments made by a corporation to its shareholders", "The cost of buying a stock", "Tax on investments"], "correct": 1, "explanation": "Companies sharing their profits with you. Free money vibes! 💰"},
         {"question": "What is an 'ETF'?", "options": ["Exchange Traded Fund", "Extra Transaction Fee", "Equity Trading Firm", "Electronic Transfer Fund"], "correct": 0, "explanation": "Like a mutual fund but trades like a stock. Very aesthetic! 📊"},
         {"question": "What is 'compound interest' in investing?", "options": ["Interest on the original amount only", "Interest calculated on the principal and accumulated interest", "A type of bank fee", "Tax on your profit"], "correct": 1, "explanation": "The 8th wonder of the world for your bag! ❄️"},
-        {"question": "What is 'market capitalization'?", "options": ["The city where the stock exchange is located", "The total value of a company's shares", "The amount of cash a company has", "The number of employees in a company"], "correct": 1, "explanation": "It tells you how big the company's 'main character' energy is! 👑"},
+        {"question": "What is 'market capitalization'?", "options": ["The city where the stock exchange is located", "The total value of a company's shares", "The amount of cash a company has", "The number of employees in a company"], "correct": 1, "explanation": "It tells you how big the company's 'main character' energy is! �"},
         {"question": "What is 'dollar-cost averaging' (DCA)?", "options": ["Investing the same amount regularly regardless of price", "Buying only when the price is low", "Selling when the price is high", "Trading dollars for other currencies"], "correct": 0, "explanation": "A consistent way to build wealth without timing the market! 📅"},
         {"question": "What is a 'P/E ratio'?", "options": ["Price-to-Earnings ratio", "Profit-to-Expense ratio", "Portfolio-to-Equity ratio", "Price-to-Entry ratio"], "correct": 0, "explanation": "Helps you see if a stock is overpriced or a steal! 🔍"},
-        {"question": "What is 'asset allocation'?", "options": ["Giving away your assets", "Dividing your portfolio among different categories", "Choosing which bank to use", "Buying only one type of stock"], "correct": 1, "explanation": "The mix of stocks, bonds, and cash in your portfolio! 🎨"},
+        {"question": "What is 'asset allocation'?", "options": ["Giving away your assets", "Dividing your portfolio among different categories", "Choosing which bank to use", "Buying only one type of stock"], "correct": 1, "explanation": "The mix of stocks, bonds, and <span class=\"math-inline\">\\\\text\{cash\}\</span> in your portfolio! 🎨"},
         {"question": "What is 'risk tolerance'?", "options": ["The amount of risk you can handle without panicking", "The total amount of money you have", "A type of insurance policy", "The interest rate on a loan"], "correct": 0, "explanation": "Knowing your vibe when the market dips! 📉"},
         {"question": "What is a 'stock split'?", "options": ["When a company goes bankrupt", "Increasing the number of shares by splitting existing ones", "Selling half of your shares", "When two companies merge"], "correct": 1, "explanation": "More shares at a lower price, same total value! ✂️"},
         {"question": "What is an 'IPO'?", "options": ["Initial Public Offering", "Internal Profit Option", "International Price Order", "Instant Payment Online"], "correct": 0, "explanation": "When a company first goes public on the stock market! 🚀"},
-        {"question": "What are 'blue chip stocks'?", "options": ["Stocks of small, new companies", "Stocks of large, well-established, profitable companies", "Stocks that cost very little", "Stocks in the gambling industry"], "correct": 1, "explanation": "The 'Old Money' of the stock market. Stable vibes! 💎"},
+        {"question": "What are 'blue chip stocks'?", "options": ["Stocks of small, new companies", "Stocks of large, well-established, profitable companies", "Stocks that cost very little", "Stocks in the gambling industry"], "correct": 1, "explanation": "The 'Legacy' of the stock market. Stable vibes! 💎"},
         {"question": "What is 'value investing'?", "options": ["Buying stocks that are popular on TikTok", "Buying stocks that are undervalued compared to their worth", "Buying stocks with the highest price", "Investing in expensive jewelry"], "correct": 1, "explanation": "Finding those hidden gems at a discount! 💎"},
         {"question": "What is 'rebalancing' a portfolio?", "options": ["Withdrawing all your money", "Adjusting the weights of your assets back to your target", "Buying more of your favorite stock", "Opening a new brokerage account"], "correct": 1, "explanation": "Keeping your investment vibes in check! ⚖️"},
         {"question": "What is 'capital gains tax'?", "options": ["Tax on your salary", "Tax on the profit from selling an asset", "Tax on your savings account", "Tax for living in a capital city"], "correct": 1, "explanation": "The government's cut when you sell for a profit! 💸"},
         {"question": "What is 'volatility'?", "options": ["When the market stays the same", "The rate at which the price of an asset increases or decreases", "A type of high-speed trading", "When a company pays a dividend"], "correct": 1, "explanation": "The rollercoaster vibes of the market! 🎢"},
-        {"question": "What is a 'bond'?", "options": ["A type of stock", "A loan you give to a government or corporation", "A contract with your broker", "A shared bank account"], "correct": 1, "explanation": "You're the lender now, bestie! 📜"},
+        {"question": "What is a 'bond'?", "options": ["A type of stock", "A loan you give to a government or corporation", "A contract with your broker", "A shared bank account"], "correct": 1, "explanation": "You're the lender now, friend! 📜"},
         {"question": "What is 'liquidity' in investing?", "options": ["How much cash a company has", "How easily an asset can be turned into cash", "Investing in beverage companies", "The total volume of trades in a day"], "correct": 1, "explanation": "How fast can you get your bag back! 💧"},
         {"question": "What is a 'REIT'?", "options": ["Real Estate Investment Trust", "Return on Equity Investment Tool", "Regional Equity Information Team", "Real Estate Interest Tax"], "correct": 0, "explanation": "Investing in real estate without buying a whole building! 🏢"},
         {"question": "What is a 'mutual fund'?", "options": ["A fund you share with a friend", "A pool of money from many investors managed by a pro", "A fund that only buys Bitcoin", "A type of personal savings account"], "correct": 1, "explanation": "The ultimate group project for your money! 🤝"}
@@ -292,7 +292,7 @@ quiz_questions = {
         {"question": "What is an APR?", "options": ["Annual Percentage Rate", "Automatic Payment Receipt", "Account Premium Ratio", "Annual Profit Return"], "correct": 0, "explanation": "APR is the yearly cost of borrowing money! 📉"},
         {"question": "What is 'credit utilization ratio'?", "options": ["The amount of credit you use compared to your limit", "How many credit cards you have", "Your total credit score", "How often you use your card"], "correct": 0, "explanation": "Keep it under 30% for that healthy score vibe! 📉"},
         {"question": "What is a 'hard inquiry'?", "options": ["When you check your own score", "When a lender checks your credit for a loan application", "When you forget your password", "A difficult question from a bank"], "correct": 1, "explanation": "This can temporarily dip your score, use it wisely! 🔍"},
-        {"question": "What is a 'soft inquiry'?", "options": ["Checking your own credit score", "Applying for a mortgage", "Getting a new credit card", "A background check by an employer"], "correct": 0, "explanation": "Checking your own score doesn't hurt it! 💅"},
+        {"question": "What is a 'soft inquiry'?", "options": ["Checking your own credit score", "Applying for a mortgage", "Getting a new credit card", "A background check by an employer"], "correct": 0, "explanation": "Checking your own score doesn't hurt it! ✨"},
         {"question": "What's the difference between a secured and unsecured loan?", "options": ["Secured requires collateral, unsecured doesn't", "Secured is only for rich people", "Unsecured is always better", "There is no difference"], "correct": 0, "explanation": "Collateral (like a car or house) makes a loan 'secured'! 🛡️"},
         {"question": "What is a 'co-signer'?", "options": ["Someone who uses your credit card", "Someone who agrees to pay your loan if you can't", "A witness to a contract", "Your bank manager"], "correct": 1, "explanation": "They're putting their score on the line for you! 🤝"},
         {"question": "What is 'identity theft'?", "options": ["When someone steals your physical ID card", "When someone uses your personal info for fraud", "Forgetting your name", "Using a fake name on social media"], "correct": 1, "explanation": "Protect your info like it's your private story! 🔐"},
@@ -301,8 +301,8 @@ quiz_questions = {
         {"question": "What is 'bankruptcy'?", "options": ["When you're out of cash for the weekend", "A legal process for when you can't pay your debts", "A way to get free money", "A type of bank account"], "correct": 1, "explanation": "A last resort that stays on your record for a long time! 🛑"},
         {"question": "What is a 'balance transfer'?", "options": ["Moving money from savings to checking", "Moving debt from one credit card to another", "Withdrawing cash from an ATM", "Giving money to a friend"], "correct": 1, "explanation": "Often used to get a lower interest rate on debt! 🔄"},
         {"question": "What's the 'minimum payment trap'?", "options": ["Paying only the minimum due, which leads to massive interest", "A fee for not using your card", "When your card gets stuck in an ATM", "A discount for paying early"], "correct": 0, "explanation": "Only paying the minimum means you'll be in debt forever! 🪤"},
-        {"question": "What is an 'annual fee'?", "options": ["A fee you pay every month", "A yearly fee for having certain credit cards", "The interest rate you pay", "A bonus you get every year"], "correct": 1, "explanation": "Make sure the perks are worth the price bestie! 💸"},
-        {"question": "What are 'credit card rewards'?", "options": ["Gifts from your friends", "Points, miles, or cash back you earn for spending", "A higher credit score", "Free interest for a year"], "correct": 1, "explanation": "Getting paid to spend your own money. Slay! 🎁"},
+        {"question": "What is an 'annual fee'?", "options": ["A fee you pay every month", "A yearly fee for having certain credit cards", "The interest rate you pay", "A bonus you get every year"], "correct": 1, "explanation": "Make sure the perks are worth the price friend! 💸"},
+        {"question": "What are 'credit card rewards'?", "options": ["Gifts from your friends", "Points, miles, or cash back you earn for spending", "A higher credit score", "Free interest for a year"], "correct": 1, "explanation": "Getting paid to spend your own money. Win! 🎁"},
         {"question": "What's the main difference between a credit and debit card?", "options": ["Credit is borrowing, debit is using your own money", "Credit is plastic, debit is metal", "Credit is for shopping, debit is for bills", "There is no difference"], "correct": 0, "explanation": "Debit is your current bag, credit is a future debt! 💳"},
         {"question": "What is 'revolving credit'?", "options": ["A loan for a revolving door", "A line of credit you can use and repay repeatedly", "A loan that must be paid in one go", "A type of high-interest investment"], "correct": 1, "explanation": "Like a credit card, the limit resets as you pay it off! 🔄"},
         {"question": "What does it mean to 'default' on a loan?", "options": ["To pay it off early", "Failing to repay the loan according to the terms", "To change the interest rate", "To ask for more money"], "correct": 1, "explanation": "This will wreck your credit score vibes! 📉"},
@@ -319,11 +319,11 @@ quiz_questions = {
         {"question": "What is 'GST'?", "options": ["Goods and Services Tax", "General Savings Tax", "Government Service Token", "Grand Sales Tax"], "correct": 0, "explanation": "GST is the tax you pay on most things you buy! 🛍️"},
         {"question": "What are 'tax brackets'?", "options": ["Brackets used to hold tax documents", "Ranges of income that are taxed at different rates", "A type of bank account", "The cost of filing taxes"], "correct": 1, "explanation": "The more you earn, the higher your bracket energy! 📈"},
         {"question": "What is a 'standard deduction'?", "options": ["A deduction everyone gets without needing receipts", "A deduction for students only", "A tax on standard products", "A fee for filing taxes"], "correct": 0, "explanation": "A flat amount that reduces your taxable income automatically! ✅"},
-        {"question": "What's the difference between a tax credit and a tax deduction?", "options": ["Credit reduces tax directly, deduction reduces taxable income", "Deduction is better than credit", "Credit is for loans, deduction is for salary", "There is no difference"], "correct": 0, "explanation": "Credits are the ultimate slay because they cut your tax bill directly! ✂️"},
+        {"question": "What's the difference between a tax credit and a tax deduction?", "options": ["Credit reduces tax directly, deduction reduces taxable income", "Deduction is better than credit", "Credit is for loans, deduction is for salary", "There is no difference"], "correct": 0, "explanation": "Credits are the ultimate win because they cut your tax bill directly! ✂️"},
         {"question": "What is 'Form 16'?", "options": ["A form for opening a bank account", "A certificate showing your salary and taxes deducted", "A form to apply for a credit card", "A type of tax for 16-year-olds"], "correct": 1, "explanation": "Your employer gives you this to help you file your taxes! 📄"},
         {"question": "Why is a PAN card important for taxes?", "options": ["It's a cool-looking card", "It's your unique ID for all tax-related transactions", "It gives you discounts on shopping", "It's needed for social media"], "correct": 1, "explanation": "Permanent Account Number - essential for your financial identity! 🆔"},
         {"question": "What is 'tax evasion'?", "options": ["Illegally not paying your taxes", "Legally reducing your taxes", "A type of tax for travelers", "Paying taxes early"], "correct": 0, "explanation": "Tax evasion is illegal and definitely not the vibe! 🚫"},
-        {"question": "What is 'tax avoidance'?", "options": ["Illegally hiding money", "Legally using tax laws to reduce your tax bill", "Ignoring your tax notices", "A type of tax for avoiding work"], "correct": 1, "explanation": "Avoidance is smart and legal. We love a tax-savvy queen! 🧠"},
+        {"question": "What is 'tax avoidance'?", "options": ["Illegally hiding money", "Legally using tax laws to reduce your tax bill", "Ignoring your tax notices", "A type of tax for avoiding work"], "correct": 1, "explanation": "Avoidance is smart and legal. We love a tax-savvy pro! 🧠"},
         {"question": "What are 'indirect taxes'?", "options": ["Taxes you pay directly to the government", "Taxes included in the price of goods and services", "Taxes on your secret income", "Taxes you pay to your friends"], "correct": 1, "explanation": "Like GST, you pay it when you buy things! 🛍️"},
         {"question": "What is 'excise duty'?", "options": ["A tax on imported goods", "A tax on goods produced within the country", "A tax on your daily exercise", "A fee for government employees"], "correct": 1, "explanation": "Tax on manufacturing items like fuel or tobacco! ⛽"},
         {"question": "What is 'customs duty'?", "options": ["A tax on things you make at home", "A tax on goods imported or exported from the country", "A fee for being a customer", "A type of tax for weddings"], "correct": 1, "explanation": "Paid at the border for those international vibes! ✈️"},
@@ -342,7 +342,7 @@ quiz_questions = {
 
 def finance_quiz():
     if not st.session_state.logged_in:
-        st.error("Bestie, login first! 🫖")
+        st.error("Friend, login first! 🫖")
         return
     init_quiz_db()
     st.title(" Financial Knowledge Check")
@@ -355,7 +355,7 @@ def finance_quiz():
     if 'current_quiz_questions' not in st.session_state: st.session_state.current_quiz_questions = []
 
     if not st.session_state.selected_category:
-        st.subheader("Pick your category bestie! 💅")
+        st.subheader("Pick your category! ✨")
         categories = list(quiz_questions.keys())
         cols = st.columns(len(categories))
         for i, category in enumerate(categories):
@@ -385,10 +385,10 @@ def finance_quiz():
                 selected_idx = q_data['options'].index(choice)
                 if st.button("Submit Answer"):
                     if selected_idx == q_data['correct']:
-                        st.success("Yasss queen! ✨")
+                        st.success("Absolute Legend! ✨")
                         st.session_state.quiz_score += 1
                     else:
-                        st.error("Not the serve bestie! 💁‍♀️")
+                        st.error("Not quite! 🧐")
                     
                     st.info(q_data['explanation'])
                     st.session_state.questions_answered += 1
@@ -408,13 +408,13 @@ def finance_quiz():
         percentage = (st.session_state.quiz_score / len(st.session_state.current_quiz_questions)) * 100
         
         if percentage == 100:
-            st.markdown("### 👑 TOTAL SLAY! You're a financial icon! 👑")
+            st.markdown("### � TOTAL LEGEND! You're a financial icon! �")
         elif percentage >= 70:
-            st.markdown("### 💅 Good vibes! You're getting that bag! 💅")
+            st.markdown("### ✨ Good vibes! You're getting that bag! ✨")
         elif percentage >= 40:
             st.markdown("### 📈 Getting there! Keep building that empire! 📈")
         else:
-            st.markdown("### ☕ Time to study the tea, bestie! ☕")
+            st.markdown("### ☕ Time to study the facts! ☕")
             
         if st.button("New Category"):
             st.session_state.selected_category = None
@@ -508,13 +508,13 @@ def fetch_ticker_data(tickers):
 
 def investment_vibes():
     if not st.session_state.get('logged_in', False):
-        st.error("Bestie, login first! 🫖")
+        st.error("Friend, login first! 🫖")
         return
     
     st.title("✨ Investment Vibes Check ✨")
-    st.markdown("### Because we're not just saving, we're building an empire! 💅")
+    st.markdown("### Because we're not just saving, we're building an empire! �")
     
-    st.info("Investments are like your skincare routine - the earlier you start, the better you'll look in 20 years! 💆‍♀️")
+    st.info("Investments are like your daily routine - the earlier you start, the better you'll look in 20 years! 💆‍♂️")
     
     # Live data toggle
     live_mode = st.toggle("Enable Live Mode (Auto-updates every 10s) 🔥", value=False)
@@ -531,7 +531,7 @@ def investment_vibes():
             tab1, tab2 = st.tabs(["Stock Market 📈", "Crypto Market 🚀"])
             
             with tab1:
-                st.header("Real-time Stocks 💅")
+                st.header("Real-time Stocks �")
                 stock_data = fetch_ticker_data(stock_tickers)
                 if stock_data:
                     df_stocks = pd.DataFrame(stock_data)
@@ -540,7 +540,7 @@ def investment_vibes():
                         subset=['Change', 'Change %']
                     ), use_container_width=True)
                 else:
-                    st.warning("Fetching live stock tea... 🫖")
+                    st.warning("Fetching live stock talk... 🫖")
             
             with tab2:
                 st.header("Real-time Crypto 🚀")
@@ -571,6 +571,6 @@ def investment_vibes():
     st.markdown("---")
     st.header("Which Investor Are You? 🧠")
     risk_profile = st.radio("Market dips? 📉", ["Panic! (Low)", "Wait and see (Mid)", "Buy the dip! (High)"])
-    if "Panic" in risk_profile: st.write("Safety First Queen! 🛡️")
-    elif "Wait" in risk_profile: st.write("Balanced Bestie! ⚖️")
+    if "Panic" in risk_profile: st.write("Safety First Legend! 🛡️")
+    elif "Wait" in risk_profile: st.write("Balanced Pro! ⚖️")
     else: st.write("Risk-Taking Icon! 🚀")

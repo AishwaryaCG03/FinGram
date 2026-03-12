@@ -19,72 +19,43 @@ def calculate_savings(monthly_save, years, interest_rate):
     return pd.DataFrame(savings_data)
 
 def savings_calculator():
-    if not st.session_state.logged_in:
-        st.error("Bestie, you need to login first to see the tea! 🫖")
-        return
-
-    st.title("💰 Savings Calculator: Get That Bag! ")
-    st.markdown("### Because we're trying to get rich, bestie!")
-
+    st.title("✨ Savings Calculator")
+    st.markdown("### Because we're trying to get wealthy, legend!")
+    
+    # User inputs
     col1, col2 = st.columns(2)
-
     with col1:
-        monthly_save = st.slider(
-            "Monthly Savings (Your 'No Starbucks' Money) 🧋",
-            min_value=10,
-            max_value=1000,
-            value=100,
-            step=10
-        )
-        
-        years = st.slider(
-            "Years (How long till main character status) ⭐",
-            min_value=1,
-            max_value=30,
-            value=5
-        )
-        
-        interest_rate = st.slider(
-            "Interest Rate (The tea your bank spills) % 📈",
-            min_value=0.0,
-            max_value=15.0,
-            value=5.0,
-            step=0.1
-        )
-
-    # Calculate savings
-    df = calculate_savings(monthly_save, years, interest_rate)
+        current_savings = st.number_input("How much you got now? (₹)", min_value=0, value=1000, step=100)
+        monthly_contribution = st.number_input("Monthly deposit (₹)", min_value=0, value=500, step=50)
     
     with col2:
-        final_amount = df['Savings'].iloc[-1]
-        st.metric(
-            label="Final Bag 💰",
-            value=f"${final_amount:,.2f}",
-            delta=f"Started from ${monthly_save:,.2f}/month"
-        )
+        interest_rate = st.slider("Annual Interest Rate (%)", min_value=0.0, max_value=15.0, value=7.0, step=0.1)
+        years = st.slider("Time horizon (Years)", min_value=1, max_value=40, value=5)
 
-    # Create a plotly chart that's giving Instagram aesthetic
-    fig = px.line(
-        df,
-        x='Month',
-        y='Savings',
-        title="Your Money Glow Up !!",
-        labels={'Savings': 'Total Savings ($)', 'Month': 'Months'},
-    )
+    # Calculate future value
+    # Formula: FV = P(1 + r/n)^(nt) + PMT * [((1 + r/n)^(nt) - 1) / (r/n)]
+    n = 12 # monthly compounding
+    r = interest_rate / 100
+    t = years
     
-    fig.update_layout(
-        template="plotly_dark",
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-    )
+    future_value = current_savings * (1 + r/n)**(n*t) + monthly_contribution * (((1 + r/n)**(n*t) - 1) / (r/n))
     
-    st.plotly_chart(fig, use_container_width=True)
+    st.markdown("---")
+    st.header(f"In {years} years, you'll have:")
+    st.title(f"₹{future_value:,.2f} 💰")
+    
+    # Motivation
+    if future_value > 100000:
+        st.success("That's a whole lot of bag! Keep going! 🚀")
+    elif future_value > 50000:
+        st.info("Solid growth! Future you is vibing! ✨")
+    else:
+        st.warning("Every coin counts! Start small, finish big! 🔥")
 
-    # Add some motivational content
-    st.markdown("""
-    ### Quick Money Tips That Slap 👏
-    - Skip the daily iced coffee (jk bestie, treat yourself) ☕
-    - Use that student discount like it's your job 🎓
-    - Invest in index funds (boring but boujee) 📈
-    - Start an emergency fund (for when the main character needs a plot twist) 🎭
-    """) 
+    # Fun breakdown
+    st.markdown("### How to get there faster:")
+    st.markdown(f"""
+    - **Total invested**: ₹{current_savings + (monthly_contribution * 12 * years):,.2f}
+    - **Interest earned**: ₹{future_value - (current_savings + (monthly_contribution * 12 * years)):,.2f}
+    - Skip the daily iced coffee (jk friend, treat yourself) ☕
+    """)

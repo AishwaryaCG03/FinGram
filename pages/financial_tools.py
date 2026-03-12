@@ -46,12 +46,12 @@ def get_expenses(username):
 
 def expense_tracker():
     if not st.session_state.logged_in:
-        st.error("Bestie, login first! 🫖")
+        st.error("Friend, login first! 🫖")
         return
     init_expense_db()
     st.title(" Expense Tracker")
     st.markdown("### Track your coins and split bills like a boss! ✨")
-    categories = ["Food & Drinks 🍕", "Shopping 🛍️", "Transportation 🚗", "Entertainment 🎮", "Bills & Utilities 📱", "Health & Fitness 💪", "Education 📚", "Travel ✈️", "Other 💅"]
+    categories = ["Food & Drinks 🍕", "Shopping 🛍️", "Transportation 🚗", "Entertainment 🎮", "Bills & Utilities 📱", "Health & Fitness 💪", "Education 📚", "Travel ✈️", "Other ✨"]
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("Add New Expense 💸")
@@ -60,20 +60,20 @@ def expense_tracker():
             category = st.selectbox("Category", categories)
             description = st.text_input("Description")
             date = st.date_input("Date")
-            st.markdown("### Split the Bill? 💁‍♀️")
+            st.markdown("### Split the Bill? 🧐")
             split_bill = st.checkbox("Split this expense")
             if split_bill:
                 split_with = st.text_input("Split with (comma-separated names)")
                 split_ways = st.number_input("Split into how many ways?", min_value=2, value=2)
                 split_amount = amount / split_ways if split_ways > 0 else amount
                 st.info(f"Each person pays: ₹{split_amount:.2f}")
-            submit = st.form_submit_button("Add Expense Bestie! ")
+            submit = st.form_submit_button("Add Expense! ✨")
             if submit:
                 if amount > 0 and category and description:
                     save_expense(st.session_state.username, amount, category, description, date.strftime("%Y-%m-%d"), split_with if split_bill else None, split_amount if split_bill else None)
-                    st.success("Expense added! You're giving organized queen energy! ✨")
+                    st.success("Expense added! You're giving organized pro energy! ✨")
                 else:
-                    st.error("Bestie, fill in all the details! 💁‍♀️")
+                    st.error("Friend, fill in all the details! 🧐")
     with col2:
         st.subheader("Your Expenses 📊")
         expenses = get_expenses(st.session_state.username)
@@ -83,14 +83,14 @@ def expense_tracker():
             st.metric("Total Expenses", f"₹{total_expenses:,.2f}")
             st.dataframe(df, use_container_width=True)
             csv = df.to_csv(index=False)
-            st.download_button(label="Download Expenses Bestie! 📥", data=csv, file_name="expenses.csv", mime="text/csv")
+            st.download_button(label="Download Expenses! 📥", data=csv, file_name="expenses.csv", mime="text/csv")
         else:
-            st.info("No expenses yet bestie! Start tracking your coins! ")
+            st.info("No expenses yet friend! Start tracking your coins! ✨")
 
 # --- EMI Calculator Section ---
 def emi_calculator():
     if not st.session_state.logged_in:
-        st.error("Bestie, login first! 🫖")
+        st.error("Friend, login first! 🫖")
         return
     st.title(" EMI Calculator")
     st.markdown("### Know Your Monthly Drama 💸")
@@ -104,7 +104,7 @@ def emi_calculator():
             st.subheader("Payment Details")
             loan_tenure_years = st.slider("Loan Tenure (Years) ⏳", min_value=1, max_value=30, value=5, step=1)
             down_payment = st.number_input("Down Payment (₹) 💵", min_value=0, value=0, step=1000)
-        submitted = st.form_submit_button("Calculate That EMI Bestie 🚀")
+        submitted = st.form_submit_button("Calculate That EMI 🚀")
     if submitted:
         actual_loan_amount = loan_amount - down_payment
         monthly_interest_rate = (interest_rate / 100) / 12
@@ -114,7 +114,7 @@ def emi_calculator():
         else:
             emi = actual_loan_amount / num_payments
         st.markdown("---")
-        st.subheader("Your Financial Tea ☕")
+        st.subheader("Your Financial Talk ☕")
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric(label="Monthly Payment", value=f"₹{emi:.2f}", delta="Monthly commitment")
@@ -122,7 +122,7 @@ def emi_calculator():
             total_payment = emi * num_payments
             st.metric(label="Total Payment", value=f"₹{total_payment:.2f}", delta=f"₹{total_payment - actual_loan_amount:.2f} in interest")
         with col3:
-            st.metric(label="Total Interest", value=f"₹{total_payment - actual_loan_amount:.2f}", delta="A lot of chai money")
+            st.metric(label="Total Interest", value=f"₹{total_payment - actual_loan_amount:.2f}", delta="A lot of coffee money")
         schedule_data = []
         remaining_balance = actual_loan_amount
         for month in range(1, num_payments + 1):
@@ -170,8 +170,8 @@ def calculate_savings(initial_amount, monthly_savings, interest_rate, years):
     return pd.DataFrame({'Date': dates, 'Balance': balances, 'Contributions': contributions, 'Interest': interests})
 
 def savings_calculator():
-    st.title("💅 Savings Calculator")
-    st.markdown("### Plan your glow-up journey bestie! ✨")
+    st.title("✨ Savings Calculator")
+    st.markdown("### Plan your glow-up journey legend! ✨")
     with st.form("savings_form"):
         col1, col2 = st.columns(2)
         with col1:
@@ -180,7 +180,7 @@ def savings_calculator():
         with col2:
             interest_rate = st.number_input("Annual Interest Rate (%)", min_value=0.0, max_value=20.0, value=6.0, step=0.1)
             years = st.number_input("Time Period (Years)", min_value=1, max_value=50, value=5, step=1)
-        submit = st.form_submit_button("Calculate My Future Bag 💅")
+        submit = st.form_submit_button("Calculate My Future Bag 🔥")
     if submit:
         df = calculate_savings(initial_amount, monthly_savings, interest_rate, years)
         col1, col2, col3 = st.columns(3)

@@ -22,9 +22,9 @@ KNOWLEDGE_BASE = {
             "How to save money on rent and bills",
             "I want to start budgeting but don't know how"
         ],
-        "response": "Bestie, your budget is giving 'I don't know her' vibes 👩‍🦯",
+        "response": "Legend, your budget is giving 'I don't know her' vibes 👩‍🦯",
         "advice": """
-        - **Try the 50/30/20 rule**: 50% for needs, 30% for wants, 20% for savings. It's the ultimate slay! 💅
+        - **Try the 50/30/20 rule**: 50% for needs, 30% for wants, 20% for savings. It's the ultimate win! ✨
         - **Track everything**: Use the Expense Tracker tab to see exactly where your bag is leaking. No cap! 💸
         - **Automate your savings**: Set up a direct transfer to your savings account on payday. Future you will thank you! ✨
         """
@@ -37,11 +37,11 @@ KNOWLEDGE_BASE = {
             "I'm scared of losing money in the market",
             "When is the best time to start investing"
         ],
-        "response": "Investing is giving 'main character energy' 👑",
+        "response": "Investing is giving 'main character energy' 🔥",
         "advice": """
         - **Start small with Index Funds**: They are stable, reliable, and perfect for long-term growth. No gatekeeping here! 📈
-        - **Time in the market > Timing the market**: The earlier you start, the more compound interest works its magic. Slay! ✨
-        - **Diversify your portfolio**: Don't put all your coins in one basket (or one meme coin). Stay balanced, bestie! ⚖️
+        - **Time in the market > Timing the market**: The earlier you start, the more compound interest works its magic. Legendary! ✨
+        - **Diversify your portfolio**: Don't put all your coins in one basket (or one meme coin). Stay balanced, legend! ⚖️
         """
     },
     "debt": {
@@ -52,11 +52,11 @@ KNOWLEDGE_BASE = {
             "Should I pay off debt or save money first",
             "I feel overwhelmed by my monthly payments"
         ],
-        "response": "Debt is giving 'toxic ex' vibes and we need to block it 🚫",
+        "response": "Debt is giving 'toxic energy' and we need to block it 🚫",
         "advice": """
         - **Debt Snowball Method**: Pay off the smallest debts first to get those quick wins and momentum. You got this! 🔥
         - **Debt Avalanche Method**: Focus on the debt with the highest interest rate first to save money in the long run. Big brain moves! 🧠
-        - **Negotiate your rates**: Call your bank and ask for a lower interest rate. If you don't ask, the answer is always no, bestie! 📞
+        - **Negotiate your rates**: Call your bank and ask for a lower interest rate. If you don't ask, the answer is always no, friend! 📞
         """
     },
     "savings": {
@@ -69,8 +69,8 @@ KNOWLEDGE_BASE = {
         ],
         "response": "Saving for your goals is the ultimate glow-up! ✨",
         "advice": """
-        - **Emergency Fund is a must**: Aim for 3-6 months of expenses. It's your 'toxic situationship' backup plan! 💅
-        - **Use the 'Pay Yourself First' method**: Treat your savings like a bill that must be paid first. Period! 💸
+        - **Emergency Fund is a must**: Aim for 3-6 months of expenses. It's your ultimate backup plan! 🔥
+        - **Use the 'Pay Yourself First' method**: Treat your savings like a bill that must be paid first. Full stop! 💸
         - **High-Yield Savings Accounts (HYSA)**: Put your emergency fund where it actually earns interest. Don't let your money sleep! 😴💰
         """
     }
@@ -101,7 +101,7 @@ def get_local_ai_advice(problem):
     
     # If similarity is too low, return default
     if max_similarity < 0.2:
-        return "That's giving 'villain origin story' 🖤", "**Real Talk Bestie:** Start by tracking all your expenses for a month to see where the tea is spilling! 💅"
+        return "That's giving 'villain origin story' 🖤", "**Real Talk Legend:** Start by tracking all your expenses for a month to see where the bag is leaking! ✨"
     
     # Find which category the best match belongs to
     current_idx = 0
@@ -111,7 +111,7 @@ def get_local_ai_advice(problem):
             return KNOWLEDGE_BASE[cat]["response"], KNOWLEDGE_BASE[cat]["advice"]
         current_idx += num_problems
     
-    return "That's giving 'main character era' ✨", "Keep doing you, bestie! 💅"
+    return "That's giving 'main character era' ✨", "Keep doing you, legend! ✨"
 
 def get_ai_advice(problem):
     # Try Gemini first if API key exists
@@ -121,7 +121,7 @@ def get_ai_advice(problem):
             genai.configure(api_key=api_key)
             model = genai.GenerativeModel('gemini-pro')
             prompt = f"""
-            You are a financial advisor for GenZ. You give practical, expert advice but use GenZ slang (like 'bestie', 'no cap', 'slay', 'tea', 'bag', 'main character energy'). 
+            You are a financial advisor for GenZ. You give practical, expert advice but use GenZ slang (like 'legend', 'no cap', 'win', 'facts', 'bag', 'main character energy'). 
             The user has the following financial problem: '{problem}'
             Provide your response in two parts:
             1. A 'GenZ Response': A short, witty, and relatable comment about their situation.
@@ -131,7 +131,7 @@ def get_ai_advice(problem):
             response = model.generate_content(prompt)
             parts = response.text.split("Financial Advice")
             genz_res = parts[0].replace("GenZ Response:", "").strip()
-            advice_res = parts[1].strip() if len(parts) > 1 else "No advice generated, bestie. 😭"
+            advice_res = parts[1].strip() if len(parts) > 1 else "No advice generated, legend. 😭"
             return genz_res, advice_res
         except:
             pass
@@ -156,10 +156,10 @@ def get_user_expenses(username):
 
 def profile_view():
     if not st.session_state.get('logged_in', False):
-        st.error("Bestie, login first! 🫖")
+        st.error("Friend, login first! 🫖")
         return
     username = st.session_state.username
-    st.title(f"👑 {username}'s Financial Empire")
+    st.title(f"🔥 {username}'s Financial Empire")
     col1, col2 = st.columns(2)
     with col1:
         st.header("Quiz Achievements 🏆")
@@ -167,8 +167,8 @@ def profile_view():
         if scores:
             df = pd.DataFrame(scores, columns=["Category", "Score", "Total", "Date"])
             df['Percentage'] = (df['Score'] / df['Total']) * 100
-            st.metric("Total Quizzes Slayed", len(df))
-            st.metric("Avg Slay Rate", f"{df['Percentage'].mean():.1f}%")
+            st.metric("Total Quizzes Completed", len(df))
+            st.metric("Avg Success Rate", f"{df['Percentage'].mean():.1f}%")
             st.dataframe(df[['Category', 'Score', 'Total', 'Date']].head(5), use_container_width=True)
             st.plotly_chart(px.pie(df, names='Category', title="Your Knowledge Portfolio 📚"), use_container_width=True)
         else: st.info("No quizzes taken yet! ✍️")
@@ -207,48 +207,48 @@ def get_problems():
 
 def problem_solver():
     if not st.session_state.logged_in:
-        st.error("Bestie, login first! 🫖")
+        st.error("Friend, login first! 🫖")
         return
     init_problem_solver_db()
     st.title(" Financial Problem Solver")
-    st.markdown("### Spill your financial tea and get that GenZ advice you didn't know you needed ✨")
+    st.markdown("### Share your financial talk and get that GenZ advice you didn't know you needed ✨")
 
     # API Key Input for AI (Optional)
     with st.expander("✨ Want even more personalized advice? (Optional)"):
-        st.info("The app uses a built-in AI model by default. To unlock the 'Premium' Gemini AI, add your API key here! 💅")
+        st.info("The app uses a built-in AI model by default. To unlock the 'Premium' Gemini AI, add your API key here! 🔥")
         user_api_key = st.text_input("Enter your Google Gemini API Key", type="password", help="Get your key at aistudio.google.com")
         if user_api_key:
             os.environ["GOOGLE_API_KEY"] = user_api_key
-            st.success("Premium AI unlocked! Slay! 🚀")
+            st.success("Premium AI unlocked! 🚀")
 
     # Problem submission form
     with st.form("problem_form"):
-        st.subheader("What's the financial tea? ☕")
+        st.subheader("What's the financial talk? ☕")
         problem = st.text_area("Drop your financial problem here! 💸", placeholder="Example: I can't stop spending money on coffee and my budget is crying 😭")
         
-        submitted = st.form_submit_button("Get That Tea 🚀")
+        submitted = st.form_submit_button("Get Advice 🚀")
         
         if submitted and problem:
             save_problem(st.session_state.username, problem)
-            st.success("Your tea has been spilled! Let's get you that advice bestie! 🫖")
+            st.success("Your talk has been shared! Let's get you that advice legend! 🫖")
             st.rerun()
     
     st.markdown("---")
-    st.subheader("Recent Financial Tea ☕")
+    st.subheader("Recent Financial Talk ☕")
     
     problems = get_problems()
     
     if not problems:
-        st.info("No financial tea spilled yet! Be the first to share your financial drama bestie! 🫖")
+        st.info("No financial talk shared yet! Be the first to share your financial drama legend! 🫖")
     else:
         for p_id, user, p_text, created_at in problems:
-            with st.expander(f"Tea from {user} - {created_at}", expanded=False):
+            with st.expander(f"Talk from {user} - {created_at}", expanded=False):
                 st.markdown(f"**Problem:** {p_text}")
                 
                 # Get Advice (will automatically use Gemini if key is present, otherwise local AI)
                 res, adv = get_ai_advice(p_text)
                 
-                st.markdown("### 💅 Vibe Check")
+                st.markdown("### ✨ Vibe Check")
                 st.markdown(f"**GenZ Response:** {res}")
                 st.markdown("---")
                 st.markdown("### 💰 Financial Advice 💰")
@@ -259,18 +259,18 @@ def problem_solver():
 # --- Feedback Section ---
 def feedback_form():
     if not st.session_state.logged_in:
-        st.error("Bestie, login first! 🫖")
+        st.error("Friend, login first! 🫖")
         return
-    st.title("💅 Feedback Form")
-    st.markdown("### Spill the tea on your experience! ✨")
+    st.title("✨ Feedback Form")
+    st.markdown("### Share your thoughts on your experience! ✨")
     with st.form("feedback_form"):
         st.subheader("How's the vibe? 🌟")
-        rating = st.slider("Rate your experience", 1, 5, 3, help="1 = Not it, 5 = Slayed!", format="%d ⭐")
-        st.subheader("What's the tea? 🫖")
-        feedback_text = st.text_area("Tell us what you think", placeholder="Spill the tea bestie! 💅")
+        rating = st.slider("Rate your experience", 1, 5, 3, help="1 = Not it, 5 = Legendary!", format="%d ⭐")
+        st.subheader("What's the talk? 🫖")
+        feedback_text = st.text_area("Tell us what you think", placeholder="Share your thoughts friend! ✨")
         feature_request = st.text_area("Feature requests", placeholder="What features would make this app even more iconic? ✨")
-        if st.form_submit_button("Submit Feedback Bestie! 💅"):
+        if st.form_submit_button("Submit Feedback! ✨"):
             if feedback_text or feature_request:
-                st.success("Thanks for the feedback bestie! You're the best! ✨")
+                st.success("Thanks for the feedback friend! You're the best! ✨")
                 st.balloons()
-            else: st.error("Bestie, give us some tea! 💁‍♀️")
+            else: st.error("Friend, give us some talk! 🧐")

@@ -115,30 +115,30 @@ def init_session_state():
 # Login page
 def login_page():
     st.title("✨ Welcome to FinGram ✨")
-    st.markdown("### Secure the bag by logging in first bestie! ")
+    st.markdown("### Secure the bag by logging in first! ")
     
     tab1, tab2 = st.tabs(["Login 🔑", "Sign Up 📝"])
     
     with tab1:
-        username = st.text_input("Username (spill the tea) ☕")
-        password = st.text_input("Password (keep it secret bestie) 🤫", type="password")
+        username = st.text_input("Username (share the vibes) ☕")
+        password = st.text_input("Password (keep it secret) 🤫", type="password")
         
         if st.button("Login "):
             if check_login(username, password):
                 st.session_state.logged_in = True
                 st.session_state.username = username
-                st.success("Welcome back bestie! Time to get that bread! 🍞")
+                st.success("Welcome back! Time to get that bread! 🍞")
                 st.rerun()
             else:
-                st.error("Wrong credentials bestie! Try again! 😭")
+                st.error("Wrong credentials! Try again! 😭")
     
     with tab2:
-        new_username = st.text_input("Pick a username that slays 💁‍♀️")
+        new_username = st.text_input("Pick a username that's iconic 🔥")
         new_password = st.text_input("Create a password (make it strong like your coffee) ☕", type="password")
         email = st.text_input("Drop your email (we won't spam, we're not toxic) 📧")
         
         if st.button("Sign Up ✨"):
             if register_user(new_username, new_password, email):
-                st.success("You're in bestie! Login to start your financial journey! 🚀")
+                st.success("You're in! Login to start your financial journey! 🚀")
             else:
-                st.error("Username or email already exists! Try being more original bestie! ") 
+                st.error("Username or email already exists! Try being more original! 🧐") 
