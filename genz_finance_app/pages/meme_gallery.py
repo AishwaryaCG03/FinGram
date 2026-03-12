@@ -4,7 +4,7 @@ from auth import save_engagement, get_engagement_counts, get_comments
 
 def meme_gallery():
     if not st.session_state.logged_in:
-        st.error("Bestie, you need to login first to see the tea! 🫖")
+        st.error("Friend, you need to login first to see the talk! 🫖")
         return
 
     st.title(" Financial Memes That Hit Different")
@@ -15,7 +15,7 @@ def meme_gallery():
         "Savings": [
             "Me looking at my bank account after saying 'treat yourself' too many times 👀",
             "My savings account watching me buy another iced coffee ☕",
-            "That moment when your emergency fund is looking thicker than your ex "
+            "That moment when your emergency fund is looking thicker than your monthly bills 💰"
         ],
         "Investing": [
             "Stock market be like: 📈📉 and I be like: 🙃",
@@ -62,16 +62,16 @@ def meme_gallery():
                     with eng_col3:
                         if st.button(f"🔄 {shares}", key=f"share_{category}_{i}"):
                             save_engagement(st.session_state.username, category, i, "share")
-                            st.success("Shared with your besties! 🔥")
+                            st.success("Shared with your friends! 🔥")
                             st.rerun()
                     
                     # Comments section
                     if st.session_state.get(f"show_comments_{category}_{i}", False):
                         with st.expander("💭 Comments", expanded=True):
-                            comment = st.text_input("Drop your thoughts bestie !!", key=f"comment_input_{category}_{i}")
+                            comment = st.text_input("Drop your thoughts friend !!", key=f"comment_input_{category}_{i}")
                             if st.button("Post 🚀", key=f"post_comment_{category}_{i}"):
                                 save_engagement(st.session_state.username, category, i, "comment", comment)
-                                st.success("Comment posted! You're slaying! ✨")
+                                st.success("Comment posted! Legendary! ✨")
                                 st.rerun()
                             
                             # Display existing comments
@@ -82,7 +82,7 @@ def meme_gallery():
     # Add a meme submission section
     st.markdown("---")
     st.header("📤 Submit Your Financial Meme")
-    st.markdown("Because your meme game is probably stronger than your investment portfolio (jk bestie)")
+    st.markdown("Because your meme game is probably stronger than your investment portfolio (jk legend)")
     
     col1, col2 = st.columns(2)
     with col1:
@@ -97,5 +97,5 @@ def meme_gallery():
     st.markdown("---")
     st.markdown("""
     ### Trending Hashtags 🔥
-    #FinTok #MoneyMoves #RichGirlEra #InvestingCheck #SavingsGoals #BudgetingCheck
+    #FinTok #MoneyMoves #RichEra #InvestingCheck #SavingsGoals #BudgetingCheck
     """) 
