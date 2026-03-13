@@ -175,7 +175,7 @@ def meme_gallery():
             
             # Display image if it's a user meme
             if is_user and meme.get('image_path') and os.path.exists(meme['image_path']):
-                st.image(meme['image_path'], use_container_width=True)
+                st.image(meme['image_path'], use_column_width=True)
             
             likes, comments_count, _ = get_engagement_counts(meme['category'], meme['index'], is_user_meme=is_user)
             
