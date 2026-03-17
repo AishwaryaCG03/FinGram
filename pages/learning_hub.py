@@ -51,15 +51,21 @@ def meme_gallery():
                 if not os.path.exists(upload_dir):
                     os.makedirs(upload_dir)
                 
-                file_path = os.path.join(upload_dir, f"{st.session_state.username}_{int(time.time())}_{uploaded_file.name}")
+                # Sanitize filename to avoid issues with spaces or special characters
+                safe_filename = "".join([c if c.isalnum() or c in "._-" else "_" for c in uploaded_file.name])
+                file_name = f"{st.session_state.username}_{int(time.time())}_{safe_filename}"
+                file_path = os.path.join(upload_dir, file_name)
                 with open(file_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
+                
+                # Store relative path in DB with forward slashes for better cross-platform support
+                relative_path = f"uploads/{file_name}"
                 
                 # Save to DB
                 conn = sqlite3.connect('genz_finance.db')
                 c = conn.cursor()
                 c.execute('''INSERT INTO user_memes (username, category, caption, image_path, created_at)
-                             VALUES (?, ?, ?, ?, ?)''', (st.session_state.username, meme_cat, meme_caption, file_path, datetime.now()))
+                             VALUES (?, ?, ?, ?, ?)''', (st.session_state.username, meme_cat, meme_caption, relative_path, datetime.now()))
                 conn.commit()
                 conn.close()
                 
