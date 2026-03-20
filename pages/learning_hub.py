@@ -185,7 +185,7 @@ def meme_gallery():
             
             likes, comments_count, _ = get_engagement_counts(meme['category'], meme['index'], is_user_meme=is_user)
             
-            eng_col1, eng_col2, eng_col3, _ = st.columns([1, 1, 1, 3])
+            eng_col1, eng_col2, eng_col3, eng_col4 = st.columns([1, 1, 1, 1])
             with eng_col1:
                 if st.button(f"❤️ {likes}", key=f"feed_like_{i}_{is_user}"):
                     save_engagement(st.session_state.username, meme['category'], meme['index'], "like", is_user_meme=is_user)
@@ -194,10 +194,25 @@ def meme_gallery():
                 if st.button(f"💬 {comments_count}", key=f"feed_comment_btn_{i}_{is_user}"):
                     st.session_state[f"show_feed_comments_{i}_{is_user}"] = not st.session_state.get(f"show_feed_comments_{i}_{is_user}", False)
             with eng_col3:
+                # Add download button for images
+                if is_user and meme.get('image_path') and os.path.exists(meme['image_path']):
+                    with open(meme['image_path'], "rb") as file:
+                        btn = st.download_button(
+                            label="📥",
+                            data=file,
+                            file_name=os.path.basename(meme['image_path']),
+                            mime="image/png",
+                            key=f"feed_download_{i}_{is_user}"
+                        )
+                else:
+                    # For hardcoded memes, we don't have images yet, so maybe just a placeholder or disabled
+                    st.button("📥", key=f"feed_download_disabled_{i}_{is_user}", disabled=True)
+            with eng_col4:
                 share_links = get_social_share_links(meme['caption'])
                 share_platform = st.selectbox("Share", ["Share 🔄"] + list(share_links.keys()), key=f"feed_share_{i}_{is_user}", label_visibility="collapsed")
                 if share_platform != "Share 🔄":
                     st.markdown(f"[Send It! 🚀]({share_links[share_platform]})")
+                    st.info("Tip: Download the image first (📥) to share the picture itself! ✨")
                     save_engagement(st.session_state.username, meme['category'], meme['index'], "share", is_user_meme=is_user)
             
             if st.session_state.get(f"show_feed_comments_{i}_{is_user}", False):
